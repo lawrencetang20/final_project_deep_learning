@@ -18,47 +18,47 @@
 
 	.content-margin-container {
 		display: flex;
-		width: 100%; /* Ensure the container is full width */
-		justify-content: left; /* Horizontally centers the children in the container */
-		align-items: center;  /* Vertically centers the children in the container */
+		width: 100%;
+		justify-content: left;
+		align-items: center;
 	}
 	.main-content-block {
-		width: 70%; /* Change this percentage as needed */
-    max-width: 1100px; /* Optional: Maximum width */
+		width: 70%;
+    max-width: 1100px;
 		background-color: #fff;
 		border-left: 1px solid #DDD;
 		border-right: 1px solid #DDD;
 		padding: 8px 8px 8px 8px;
-		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;#"Avenir";
+		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 	}
 	.margin-left-block {
 			font-size: 14px;
-			width: 15%; /* Change this percentage as needed */
-			max-width: 130px; /* Optional: Maximum width */
+			width: 15%;
+			max-width: 130px;
 			position: relative;
 			margin-left: 10px;
 			text-align: left;
-			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;#"Avenir";
+			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 			padding: 5px;
 	}
 	.margin-right-block {
-			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;#"Avenir";
+			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 			font-size: 14px;
-			width: 25%; /* Change this percentage as needed */
-			max-width: 256px; /* Optional: Maximum width */
+			width: 25%;
+			max-width: 256px;
 			position: relative;
 			text-align: left;
-			padding: 10px;  /* Optional: Adds padding inside the caption */
+			padding: 10px;
 	}
 
 	img {
-			max-width: 100%; /* Make sure it fits inside the container */
+			max-width: 100%;
 			height: auto;
 			display: block;
 			margin: auto;
 	}
 	.my-video {
-			max-width: 100%; /* Make sure it fits inside the container */
+			max-width: 100%;
 			height: auto;
 			display: block;
 			margin: auto;
@@ -66,17 +66,15 @@
 	/* Hide both video displays initially, will display based on JS detection */
   .vid-mobile, .vid-non-mobile { display: none; }
 
-  /* Show the video content by default on non-mobile devices */
   .show-vid-mobile .vid-mobile { display: block; }
   .show-vid-non-mobile .vid-non-mobile { display: block; }
 
-	a:link,a:visited
-	{
-		color: #0e7862; /*#1367a7;*/
+	a:link,a:visited {
+		color: #0e7862;
 		text-decoration: none;
 	}
 	a:hover {
-		color: #24b597; /*#208799;*/
+		color: #24b597;
 	}
 
 	h1 {
@@ -90,7 +88,7 @@
     font-size: 17px;
     flex-grow: 1;
 		width: 70%;
-    max-width: calc(100% - 290px); /* Adjust according to the width of .paper-code-tab */
+    max-width: calc(100% - 290px);
 	}
 	table td, table td * {
 	    vertical-align: middle;
@@ -105,13 +103,13 @@
 	    height: 150px;
 	}
 
-	.layered-paper { /* modified from: http://css-tricks.com/snippets/css/layered-paper/ */
+	.layered-paper {
 		box-shadow:
-		        0px 0px 1px 1px rgba(0,0,0,0.35), /* The top layer shadow */
-		        5px 5px 0 0px #fff, /* The second layer */
-		        5px 5px 1px 1px rgba(0,0,0,0.35), /* The second layer shadow */
-		        10px 10px 0 0px #fff, /* The third layer */
-		        10px 10px 1px 1px rgba(0,0,0,0.35); /* The third layer shadow */
+		        0px 0px 1px 1px rgba(0,0,0,0.35),
+		        5px 5px 0 0px #fff,
+		        5px 5px 1px 1px rgba(0,0,0,0.35),
+		        10px 10px 0 0px #fff,
+		        10px 10px 1px 1px rgba(0,0,0,0.35);
 		margin-top: 5px;
 		margin-left: 10px;
 		margin-right: 30px;
@@ -119,9 +117,9 @@
 	}
 
 	hr {
-    height: 1px; /* Sets the height of the line to 1 pixel */
-    border: none; /* Removes the default border */
-    background-color: #DDD; /* Sets the line color to black */
+    height: 1px;
+    border: none;
+    background-color: #DDD;
   }
 
 	div.hypothesis {
@@ -129,8 +127,6 @@
 		background-color: #EEE;
 		border: 1px solid black;
 		border-radius: 10px;
-		-moz-border-radius: 10px;
-		-webkit-border-radius: 10px;
 		font-family: Courier;
 		font-size: 18px;
 		text-align: center;
@@ -159,6 +155,7 @@
 																transparent 0%,
 																transparent 40%,
 																black 50%,
+																black 90%,
 																transparent 100%);
 		-webkit-mask-size: 8000% 100%;
 		mask-size: 8000% 100%;
@@ -180,7 +177,6 @@
 	    width: 50px;
 	}
 
-  /* Extra styles mimicking the student example */
   .algorithm-container {
 		max-width: 600px;
 		margin: 0 auto;
@@ -262,7 +258,6 @@
 	<!-- OUTLINE COLUMN -->
 	<div class="content-margin-container" id="intro">
 		<div class="margin-left-block">
-			<!-- table of contents here -->
 			<div style="position:fixed; max-width:inherit; top:max(20%,120px)">
 				<b style="font-size:16px">Outline</b><br><br>
 				<a href="#intro">Introduction</a><br><br>
@@ -313,10 +308,10 @@
         <li>stronger data augmentation for the minority class,</li>
         <li>class-weighted NLL loss,</li>
         <li>standard Focal Loss, and</li>
-        <li>a new <i>Class-Adaptive Focal NLL</i> (CAF-NLL) loss that ties the focal focusing parameter to inverse class frequency.</li>
+        <li>a new Class-Adaptive Focal NLL (CAF-NLL) loss that ties the focal focusing parameter to inverse class frequency.</li>
       </ul>
 
-      The goal is not to beat state-of-the-art radiology models, but to isolate <i>how</i> loss shaping and data rebalancing change ViT behavior in an imbalanced regime. We focus on test-time metrics that are particularly relevant for screening:
+      The goal is not to beat state-of-the-art radiology models, but to isolate how loss shaping and data rebalancing change ViT behavior in an imbalanced regime. We focus on test-time metrics that are particularly relevant for screening:
       <ul>
         <li>overall accuracy and ROC-AUC,</li>
         <li>minority-class recall (sensitivity), and</li>
@@ -341,21 +336,21 @@
       Vision Transformers (ViTs) have quickly become competitive alternatives to convolutional networks for image classification. ViT-B/16 divides an image into non-overlapping patches, linearly embeds each patch, adds positional encodings, and feeds the resulting tokens through a transformer encoder with multi-head self-attention before a classification head produces logits. While most clinical imaging work still relies on CNNs, several recent papers have shown that ViTs pre-trained on large natural image datasets can transfer surprisingly well to radiology tasks such as chest X-ray abnormality detection and mammography.<br><br>
 
       <b>Class imbalance and reweighting.</b><br>
-      Class imbalance is a well-known issue in both vision and medical ML. The simplest approach is to reweight the loss by inverse class frequency. For a binary label \(y \in \{0,1\}\) and logits \(z\), the weighted NLL loss can be written as:
+      Class imbalance is a well-known issue in both vision and medical ML. The simplest approach is to reweight the loss by inverse class frequency. For a binary label y ∈ {0,1} and predicted probability p = σ(z), the weighted NLL loss can be written as:
       <div class="formula" style="margin-top:10px; margin-bottom:10px;">
-        \( L_{\text{wNLL}} = - w_1 \, y \log p - w_0 \, (1-y) \log(1-p), \quad p = \sigma(z)\)
+        L_wNLL = - w1 * y * log(p) - w0 * (1 - y) * log(1 - p)
       </div>
-      where \(w_c \propto 1 / \text{freq}(c)\). Oversampling the minority class with a weighted sampler is equivalent to this reweighting under some assumptions, but in practice the two interact differently with stochastic optimization and augmentation pipelines.<br><br>
+      where w_c ∝ 1 / freq(c). These weights are passed directly into NLLLoss so that minority-class errors are penalized more heavily.<br><br>
 
       <b>Focal Loss.</b><br>
-      Focal Loss was introduced for dense object detection as a way to down-weight easy examples and focus training on hard, misclassified examples. For binary classification, the loss for a single example is:
+      Focal Loss was introduced for dense object detection as a way to down-weight easy examples and focus training on hard, misclassified examples. For one example with true class y and predicted probability p_t assigned to that class:
       <div class="formula" style="margin-top:10px; margin-bottom:10px;">
-        \( L_{\text{focal}} = - \alpha \,(1-p_t)^\gamma \log p_t \)
+        L_focal = - alpha_y * (1 - p_t)^gamma * log(p_t)
       </div>
-      where \(p_t\) is the predicted probability assigned to the true class, \(\alpha\) is a per-class weight, and \(\gamma\) controls how aggressively the loss down-weights easy examples. When \(\gamma=0\), Focal Loss reduces to weighted cross-entropy. In highly imbalanced settings, focal loss is often recommended as a drop-in replacement for cross-entropy.<br><br>
+      When gamma = 0, Focal Loss reduces to weighted cross-entropy. With gamma &gt; 0, easy examples with p_t close to 1 contribute less to the gradient, allowing the optimizer to focus on harder cases.<br><br>
 
       <b>Class-adaptive focal variants.</b><br>
-      Several works propose making \(\alpha\) or \(\gamma\) class-dependent, so that rare classes are treated with different focusing than frequent ones. Intuitively, we might want the loss to be both <i>heavier</i> on rare classes (via class weights) and <i>more forgiving</i> when the model is already confident on the majority class. Our proposed CAF-NLL loss follows this spirit: we start from a log-softmax + NLL formulation that is convenient for ViT and introduce a class-adaptive focal factor where the per-class focusing parameter \(\gamma_c\) is a simple function of the class weights estimated from the training distribution.<br><br>
+      Several works propose making either alpha or gamma class-dependent, so that rare classes receive both higher weight and stronger focusing. Our CAF-NLL loss follows this spirit: we start from log-softmax + NLL (convenient for ViT) and introduce a class-adaptive focal factor where the per-class focusing parameter gamma_c is a simple function of the class weights.<br><br>
 
       <b>Medical imaging benchmarks.</b><br>
       The RSNA Pneumonia Detection Challenge dataset is a widely used chest X-ray benchmark derived from NIH CXR data, with bounding boxes for pneumonia regions and image-level labels derived from radiology reports. Unlike toy datasets where classes are balanced by design, RSNA preserves a more realistic clinical label distribution, making it useful for studying imbalance in a setting that resembles real screening workflows.
@@ -373,27 +368,27 @@
       <h1>Methods &amp; Experiments</h1>
 
       <b>Dataset and splits.</b><br>
-      We use the Kaggle RSNA Pneumonia Detection Challenge dataset via <code>kagglehub</code>. Each DICOM study is associated with one or more bounding boxes and a binary label, <code>Target ∈ {0,1}</code>, indicating the presence of pneumonia. We convert this to a patient-level binary classification task:
+      We use the Kaggle RSNA Pneumonia Detection Challenge dataset via <code>kagglehub</code>. Each DICOM study is associated with one or more bounding boxes and a binary label <code>Target ∈ {0,1}</code> indicating the presence of pneumonia. We convert this to a patient-level binary classification task:
       <ul>
-        <li>Group rows by <code>patientId</code> and set <code>target = max(Target)</code>,</li>
-        <li>construct a single DICOM path per patient,</li>
-        <li>filter to images that exist on disk.</li>
+        <li>Group rows by <code>patientId</code> and set <code>target = max(Target)</code>.</li>
+        <li>Construct a single DICOM path per patient.</li>
+        <li>Filter to images that exist on disk.</li>
       </ul>
       We then perform stratified splits at the patient level:
       <ul>
-        <li>75% train / 25% validation, stratified by <code>target</code>,</li>
-        <li>carve out 10% of the training portion as an internal test set, again stratified.</li>
+        <li>75% train / 25% validation, stratified by <code>target</code>.</li>
+        <li>Carve out 10% of the training portion as an internal test set, again stratified.</li>
       </ul>
       This yields three disjoint sets with similar positive/negative ratios. We do not perform any manual downsampling: the imbalance present in the raw data is preserved.<br><br>
 
       <b>Transforms and DICOM handling.</b><br>
-      Each DICOM file is read with <code>pydicom</code>, normalized to \([0,255]\), and converted to a 3-channel <code>PIL.Image</code> so that we can reuse ImageNet normalization and ViT preprocessing. We define:
+      Each DICOM file is read with <code>pydicom</code>, normalized to the range [0, 255], and converted to a 3-channel <code>PIL.Image</code> so that we can reuse ImageNet normalization and ViT preprocessing. We define:
       <ul>
         <li><b>Base train transform</b>: resize to 224×224, random horizontal flip, convert to tensor, ImageNet mean/variance normalization.</li>
-        <li><b>Minority train transform</b>: same as base plus random vertical flip, random rotation, and <code>ColorJitter</code> for brightness, contrast, saturation, and hue.</li>
+        <li><b>Minority train transform</b>: base transform plus random vertical flip, random rotation, and <code>ColorJitter</code> for brightness, contrast, saturation, and hue.</li>
         <li><b>Eval transform</b>: resize to 224×224, convert to tensor, normalization; no stochastic augmentation.</li>
       </ul>
-      The <code>MelanomaDataset</code> class (reused name, now for pneumonia) chooses between the base and minority transform dynamically depending on the label and whether “augment minority” is enabled in a particular experiment.<br><br>
+      The <code>MelanomaDataset</code> class (name reused) chooses between the base and minority transform dynamically depending on the label and whether “augment minority” is enabled in a particular experiment.<br><br>
 
       <b>Model.</b><br>
       We fine-tune a ViT-B/16 model from <code>torchvision</code>:
@@ -412,7 +407,7 @@
         <li><b>Class-weighted NLLLoss.</b><br>
           We compute class counts on the training set and define approximate inverse-frequency weights:
           <div class="formula" style="margin-top:10px; margin-bottom:10px;">
-            \( w_c \propto \frac{1}{\text{count}(c)} \), rescaled so that \( \frac{1}{C} \sum_c w_c \approx 1. \)
+            w_c ∝ 1 / count(c), rescaled so that the mean of w_c over classes is approximately 1.0
           </div>
           These weights are passed directly to <code>nn.NLLLoss(weight=...)</code>, making positive (pneumonia) examples contribute more to the loss.
         </li>
@@ -420,30 +415,21 @@
         <li><b>Focal Loss on log-probabilities.</b><br>
           We implement a multi-class Focal Loss that takes log-probabilities:
           <div class="formula" style="margin-top:10px; margin-bottom:10px;">
-            \( L_{\text{focal}} = - \alpha_{y_i} (1 - p_{i,y_i})^\gamma \log p_{i,y_i} \)
+            L_focal = - alpha_y * (1 - p_true)^gamma * log(p_true)
           </div>
-          where \(p_{i,y_i}\) is the predicted probability of the true class. We set:
-          <ul>
-            <li>\(\gamma = 2.0\),</li>
-            <li>\(\alpha = [0.25, 0.75]\) for [no-pneumonia, pneumonia] respectively.</li>
-          </ul>
+          where <code>p_true</code> is the predicted probability of the true class. We set gamma = 2.0 and alpha = [0.25, 0.75] for [no-pneumonia, pneumonia] respectively.
         </li>
 
         <li><b>CAF-NLL: Class-Adaptive Focal NLL (our proposed loss).</b><br>
-          CAF-NLL combines class weighting and focal-style focusing in a way that automatically adapts to the degree of class imbalance. Let \(\mathbf{w}\) be the per-class weights defined above and \(\bar{w}\) their mean. We define a class-specific focusing parameter:
+          CAF-NLL combines class weighting and focal-style focusing in a way that automatically adapts to the degree of class imbalance. Let w be the per-class weights defined above and w_bar their mean. We define a class-specific focusing parameter:
           <div class="formula" style="margin-top:10px; margin-bottom:10px;">
-            \( \gamma_c = \gamma_0 + \beta \left( \frac{w_c}{\bar{w}} - 1 \right) \)
+            gamma_c = gamma0 + beta * (w_c / w_bar - 1)
           </div>
           and a per-example loss:
           <div class="formula" style="margin-top:10px; margin-bottom:10px;">
-            \( L_{\text{CAF}} = - \, w_{y_i} \, (1 - p_{i,y_i})^{\gamma_{y_i}} \log p_{i,y_i}. \)
+            L_CAF = - w_y * (1 - p_true)^(gamma_y) * log(p_true)
           </div>
-          Intuitively:
-          <ul>
-            <li>Rare classes have larger \(w_c\) and thus larger \(\gamma_c\), making the loss focus more aggressively on misclassified minority examples.</li>
-            <li>Frequent classes keep \(\gamma_c\) closer to \(\gamma_0\), behaving more like a standard class-weighted NLL.</li>
-          </ul>
-          In our experiments we set \(\gamma_0 = 1.0\) and \(\beta = 1.0\).
+          Intuitively, rare classes have larger w_c and thus larger gamma_c, making the loss focus more aggressively on misclassified minority examples. Frequent classes keep gamma_c closer to gamma0, behaving more like a standard class-weighted NLL. In our experiments we set gamma0 = 1.0 and beta = 1.0.
         </li>
       </ol>
 
@@ -455,9 +441,9 @@
           For a given train dataframe, we build a vector of sample weights inversely proportional to class frequency and use <code>WeightedRandomSampler</code> to draw balanced mini-batches. This keeps the underlying dataset unchanged but changes the sampling distribution.</li>
 
         <li><b>Duplicate-and-augment oversampling.</b><br>
-          We compute the positive fraction in the training set and define an integer oversample factor
+          We compute the positive fraction in the training set and define an integer oversample factor:
           <div class="formula" style="margin-top:10px; margin-bottom:10px;">
-            \( \text{factor} \approx \left\lfloor \frac{1}{\text{pos\_fraction}} \right\rceil. \)
+            OVERSAMPLE_FACTOR ≈ round(1.0 / pos_fraction)
           </div>
           We then explicitly duplicate pneumonia-positive rows this many times, shuffle, and train without a weighted sampler. During this experiment, we also enable the stronger minority augmentation pipeline so that duplicated samples produce diverse views.</li>
       </ol>
@@ -470,7 +456,7 @@
         <li><b>oversample_minority</b>: NLL + <code>WeightedRandomSampler</code> for class-balanced sampling.</li>
         <li><b>augment_minority</b>: NLL + stronger augmentation only for pneumonia-positive examples.</li>
         <li><b>class_weighted_NLL</b>: class-weighted NLL with inverse-frequency weights.</li>
-        <li><b>focal_loss</b>: Focal Loss with \(\gamma=2.0\) and \(\alpha=[0.25,0.75]\).</li>
+        <li><b>focal_loss</b>: Focal Loss with gamma = 2.0 and alpha = [0.25, 0.75].</li>
         <li><b>oversample_plus_augment</b>: explicit positive duplication by <code>OVERSAMPLE_FACTOR</code> plus strong minority augmentation.</li>
         <li><b>caf_nll</b>: CAF-NLL with class-adaptive focusing parameters.</li>
       </ol>
@@ -504,30 +490,30 @@
       All experiments are implemented in a single Python file structured into three blocks: (1) data download, splits, and transforms; (2) dataset, dataloaders, model, and loss definitions; and (3) the training loop and experiment runner.<br><br>
 
       <b>Training loop and evaluation.</b><br>
-      We use Adam with a learning rate of \(3\times 10^{-4}\), batch size 32, and train for 15 epochs per experiment. The core training and evaluation functions are:
+      We use Adam with a learning rate of 3e-4, batch size 32, and train for 15 epochs per experiment. The core training and evaluation functions are:
 
       <div class="algorithm-container">
         <div class="algorithm-title">Algorithm 1: Training and Evaluation Loop</div>
         <div class="code">
-          <b>train_one_epoch(model, loader, optimizer, criterion)</b><br>
+          train_one_epoch(model, loader, optimizer, criterion):<br>
           &nbsp;&nbsp;model.train()<br>
           &nbsp;&nbsp;for (imgs, labels) in loader:<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;imgs, labels ← imgs.to(device), labels.to(device)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;imgs, labels = imgs.to(device), labels.to(device)<br>
           &nbsp;&nbsp;&nbsp;&nbsp;optimizer.zero_grad()<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;log_probs ← model(imgs)  # (N, 2)<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;loss ← criterion(log_probs, labels)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;log_probs = model(imgs)  # (N, 2)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;loss = criterion(log_probs, labels)<br>
           &nbsp;&nbsp;&nbsp;&nbsp;loss.backward()<br>
           &nbsp;&nbsp;&nbsp;&nbsp;optimizer.step()<br>
           <br>
-          <b>evaluate(model, loader, criterion, return_scores)</b><br>
+          evaluate(model, loader, criterion, return_scores):<br>
           &nbsp;&nbsp;model.eval()<br>
           &nbsp;&nbsp;for (imgs, labels) in loader:<br>
           &nbsp;&nbsp;&nbsp;&nbsp;with torch.no_grad():<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log_probs ← model(imgs.to(device))<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;loss ← criterion(log_probs, labels.to(device))<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preds ← argmax(log_probs, dim=1)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log_probs = model(imgs.to(device))<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;loss = criterion(log_probs, labels.to(device))<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preds = argmax(log_probs, dim=1)<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if return_scores:<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;probs_pos ← exp(log_probs)[:, 1]
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;probs_pos = exp(log_probs)[:, 1]
         </div>
       </div><br>
 
@@ -537,6 +523,8 @@
       The CAF-NLL loss is implemented as a subclass of <code>nn.Module</code> that takes precomputed class weights and computes per-class focusing exponents inside <code>forward</code>:
 
       <div class="code" style="margin-bottom:12px;">
+        w = class_weights  # (C,)<br>
+        w_bar = w.mean()<br>
         gamma_c = gamma0 + beta * (w / w_bar - 1.0)  # (C,)<br>
         pt = probs[range(N), targets]<br>
         log_pt = log_probs[range(N), targets]<br>
@@ -545,7 +533,7 @@
         loss = - (w_t * (1 - pt)**gamma_t * log_pt)
       </div>
 
-      Because we operate directly on log-probabilities, CAF-NLL can be swapped in without changing the rest of the training code. When <code>beta = 0</code>, the loss reduces to class-weighted NLL with a mild focal factor controlled by <code>gamma0</code>.<br><br>
+      Because we operate directly on log-probabilities, CAF-NLL can be swapped in without changing the rest of the training code. When beta = 0, the loss reduces to class-weighted NLL with a mild focal factor controlled by gamma0.<br><br>
 
       <b>Reproducibility and assets.</b><br>
       We fix all random seeds (Python, NumPy, PyTorch CPU/GPU) to 42. Figure assets (ROC curves, confusion matrices, and metric tables) are saved as PNGs and can be dropped into this HTML template under <code>./images/</code> for the final blog submission.
@@ -585,7 +573,7 @@
       <b>CAF-NLL: does class-adaptive focusing help?</b><br>
       Our proposed CAF-NLL loss lets the data decide how much focusing each class should get based on inverse frequency. For RSNA, where pneumonia is much rarer than normal, this yields:
       <ul>
-        <li>a larger \(\gamma\) for pneumonia than for the majority class,</li>
+        <li>a larger gamma for pneumonia than for the majority class,</li>
         <li>a loss surface that aggressively emphasizes misclassified positive examples,</li>
         <li>and a training behavior that looks like “class-weighted focal loss with a principled hyperparameter schedule.”</li>
       </ul>
@@ -593,7 +581,7 @@
       Qualitatively, CAF-NLL tends to:
       <ul>
         <li>match or slightly outperform Focal Loss on pneumonia recall,</li>
-        <li>avoid some of the extreme over-fitting behaviors we saw when tuning \(\gamma\) and \(\alpha\) by hand,</li>
+        <li>avoid some of the extreme over-fitting behaviors we saw when tuning gamma and alpha by hand,</li>
         <li>and maintain competitive overall ROC-AUC.</li>
       </ul>
 
@@ -604,7 +592,7 @@
       Across all seven experiments, a few patterns emerge:
       <ol>
         <li>Simple class weighting and minority augmentation already fix a large fraction of the minority-class error in our baseline ViT.</li>
-        <li>Focal Loss improves recall further but introduces an extra hyperparameter dimension (\(\alpha, \gamma\)) that is non-trivial to tune.</li>
+        <li>Focal Loss improves recall further but introduces an extra hyperparameter dimension (alpha, gamma) that is non-trivial to tune.</li>
         <li>CAF-NLL offers a reasonable compromise: it adapts the focal focusing to the degree of class imbalance automatically while keeping the implementation simple.</li>
       </ol>
       For practitioners, this suggests that:
@@ -647,7 +635,7 @@
         <li>how robust these strategies are to realistic class prevalence.</li>
       </ul>
 
-      While we used pneumonia detection as our running example, the same codebase and methodology can be applied directly to melanoma detection on under-represented skin types—the problem that originally motivated this work. In that setting, class imbalance interacts with <i>subgroup imbalance</i> (e.g., different skin tones), and loss-level tricks like CAF-NLL could be combined with group-aware training or calibration to further reduce disparities in clinical performance.
+      While we used pneumonia detection as our running example, the same codebase and methodology can be applied directly to melanoma detection on under-represented skin types—the problem that originally motivated this work. In that setting, class imbalance interacts with subgroup imbalance (e.g., different skin tones), and loss-level tricks like CAF-NLL could be combined with group-aware training or calibration to further reduce disparities in clinical performance.
     </div>
     <div class="margin-right-block">
       Future extensions include: adding calibration metrics (ECE, Brier score), experimenting with group-DRO objectives, and repeating the study on a true skin-lesion dataset where minority groups correspond to under-represented skin types rather than just the positive class.
@@ -668,7 +656,6 @@
       </div>
     </div>
     <div class="margin-right-block">
-      <!-- margin notes for reference block here -->
     </div>
   </div>
 
