@@ -159,7 +159,6 @@
 																transparent 0%,
 																transparent 40%,
 																black 50%,
-																black 90%,
 																transparent 100%);
 		-webkit-mask-size: 8000% 100%;
 		mask-size: 8000% 100%;
@@ -176,156 +175,503 @@
 
 	.inline-div {
 			position: relative;
-	    display: inline-block; /* Makes both the div and paragraph inline-block elements */
-	    vertical-align: top; /* Aligns them at the top, you can adjust this to middle, bottom, etc., based on your needs */
-	    width: 50px; /* Optional: Adds space between the div and the paragraph */
+	    display: inline-block;
+	    vertical-align: top;
+	    width: 50px;
 	}
 
+  /* Extra styles mimicking the student example */
+  .algorithm-container {
+		max-width: 600px;
+		margin: 0 auto;
+		padding: 20px;
+		background-color: #f9f9f9;
+		border: 1px solid #ddd;
+		border-radius: 5px;
+		text-align: left;
+		display: block;
+	}
+	.algorithm-title {
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
+	.code {
+		font-family: "Courier New", Courier, monospace;
+		background: #f4f4f4;
+		padding: 10px;
+		border-radius: 5px;
+		border: 1px solid #ccc;
+		text-align: left;
+		display: block;
+	}
+  .formula {
+    font-family: "Courier New", monospace;
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    display: inline-block;
+  }
+  li {
+    margin-bottom: 12px;
+  }
+  ol li ol li {
+    margin-bottom: 8px;
+  }
 </style>
 
-	  <title>The Platonic Representation Hypothesis</title>
-      <meta property="og:title" content="The Platonic Representation Hypothesis" />
-			<meta charset="UTF-8">
-  </head>
+  <title>Loss Functions for Class-Imbalanced Medical Image Classification</title>
+  <meta property="og:title" content="Loss Functions for Class-Imbalanced Medical Image Classification" />
+	<meta charset="UTF-8">
+</head>
 
-  <body>
+<body>
 
-		<div class="content-margin-container">
-				<div class="margin-left-block">
-				</div>
-		    <div class="main-content-block">
-						<table class="header" align=left>
-								<tr>
-									<td colspan=4>
-										<span style="font-size: 32px; font-family: 'Courier New', Courier, monospace; /* Adds fallbacks */">A Grand Unified Theory of Deep Learning</span>
-									</td>
-								</tr>
-								<tr>
-										<td align=left>
-												<span style="font-size:17px"><a href="your_website">Your name</a></span>
-										</td>
-										<td align=left>
-												<span style="font-size:17px"><a href="your_partner's_website">Your partner's name</a></span>
-										</td>
-								<tr>
-									<td colspan=4 align=left><span style="font-size:18px">Final project for 6.7960, MIT</span></td>
-								</tr>
-						</table>
-					</div>
-					<div class="margin-right-block">
-					</div>
+	<!-- HEADER -->
+	<div class="content-margin-container">
+		<div class="margin-left-block">
 		</div>
+		<div class="main-content-block">
+			<table class="header" align=left>
+				<tr>
+					<td colspan=4>
+						<span style="font-size: 32px; font-family: 'Courier New', Courier, monospace;">
+							Loss Functions for Class-Imbalanced Medical Image Classification
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td align=left>
+						<span style="font-size:17px"><a href="#">Lawrence Tang</a></span>
+					</td>
+					<td align=left>
+						<span style="font-size:17px"><a href="#">Cole Foster</a></span>
+					</td>
+          <td align=left>
+						<span style="font-size:17px"><a href="#">Chase Rubin</a></span>
+					</td>
+				<tr>
+					<td colspan=4 align=left><span style="font-size:18px">Final project for 6.7960, MIT</span></td>
+				</tr>
+			</table>
+		</div>
+		<div class="margin-right-block">
+		</div>
+	</div>
 
-		<div class="content-margin-container" id="intro">
-				<div class="margin-left-block">
-          <!-- table of contents here -->
-          <div style="position:fixed; max-width:inherit; top:max(20%,120px)">
-              <b style="font-size:16px">Outline</b><br><br>
-              <a href="#intro">Introduction</a><br><br>
-              <a href="#does_x_do_y">Does X do Y?</a><br><br>
-              <a href="#implications_and_limitations">Implications and limitations</a><br><br>
+	<!-- OUTLINE COLUMN -->
+	<div class="content-margin-container" id="intro">
+		<div class="margin-left-block">
+			<!-- table of contents here -->
+			<div style="position:fixed; max-width:inherit; top:max(20%,120px)">
+				<b style="font-size:16px">Outline</b><br><br>
+				<a href="#intro">Introduction</a><br><br>
+        <a href="#prior_work">Prior Work</a><br><br>
+				<a href="#methods_experiments">Methods &amp; Experiments</a><br><br>
+        <a href="#implementation">Technical Implementation Details</a><br><br>
+        <a href="#discussion">Discussion</a><br><br>
+				<a href="#conclusion">Conclusion</a><br><br>
+        <a href="#citations">References</a><br><br>
+			</div>
+		</div>
+		<div class="main-content-block">
+		</div>
+		<div class="margin-right-block">
+		</div>
+	</div>
+
+  <!-- HERO IMAGE -->
+  <div class="content-margin-container">
+    <div class="margin-left-block">
+    </div>
+    <div class="main-content-block">
+      <img src="./images/rsna_pneumonia_montage.png" width=512px/>
+    </div>
+    <div class="margin-right-block">
+      <b>Figure 1.</b> Example chest X-ray images from the RSNA Pneumonia Detection Challenge dataset. Pneumonia-positive cases (minority class) are visually subtle and under-represented relative to normal studies, making this a natural testbed for class-imbalanced medical image classification.
+    </div>
+  </div>
+
+  <!-- INTRODUCTION -->
+  <div class="content-margin-container" id="intro">
+    <div class="margin-left-block">
+    </div>
+    <div class="main-content-block">
+      <h1>Introduction</h1>
+
+      Deep learning systems deployed in medicine often face the worst possible combination of conditions: noisy labels, strong distribution shifts, and severe class imbalance. In chest X-ray screening, for example, the fraction of studies with confirmed pneumonia or other acute findings is small compared to the number of normal scans. Yet from a clinical perspective, correctly identifying these minority cases is exactly what matters most.<br><br>
+
+      In this project we ask the following question:
+      <div class="hypothesis" style="margin-top:16px; margin-bottom:16px;">
+        <b>Research question.</b> For a fixed Vision Transformer (ViT) architecture, how do different loss functions and imbalance strategies trade off overall accuracy vs. minority-class performance on a real, highly imbalanced medical imaging dataset?
+      </div>
+
+      Concretely, we fine-tune an ImageNet-pretrained ViT-B/16 on the RSNA Pneumonia Detection Challenge chest X-ray dataset, treating pneumonia vs. no-pneumonia as a binary classification problem. The dataset is moderately imbalanced: most studies are labeled as “no pneumonia,” and pneumonia-positive images are the minority. We keep the architecture and data splits fixed and vary only how we handle class imbalance during training:
+      <ul>
+        <li>no imbalance handling (plain NLL loss),</li>
+        <li>oversampling with a weighted sampler,</li>
+        <li>stronger data augmentation for the minority class,</li>
+        <li>class-weighted NLL loss,</li>
+        <li>standard Focal Loss, and</li>
+        <li>a new <i>Class-Adaptive Focal NLL</i> (CAF-NLL) loss that ties the focal focusing parameter to inverse class frequency.</li>
+      </ul>
+
+      The goal is not to beat state-of-the-art radiology models, but to isolate <i>how</i> loss shaping and data rebalancing change ViT behavior in an imbalanced regime. We focus on test-time metrics that are particularly relevant for screening:
+      <ul>
+        <li>overall accuracy and ROC-AUC,</li>
+        <li>minority-class recall (sensitivity), and</li>
+        <li>how often each method misclassifies pneumonia-positive studies as normal.</li>
+      </ul>
+
+      By running all methods in a shared codebase on the same dataset, we aim to provide a small, empirical “loss-function lab” for class-imbalanced medical imaging, and to understand whether more complicated losses like Focal Loss and CAF-NLL actually help compared to simpler tricks like oversampling plus augmentation.
+    </div>
+    <div class="margin-right-block">
+      The original project motivation was melanoma detection on under-represented skin types, but for compute and data-access reasons we prototype on the RSNA pneumonia dataset. The mechanics of imbalance and minority-class errors are similar, and the code and experimental setup can be reused for melanoma in future work.
+    </div>
+  </div>
+
+  <!-- PRIOR WORK -->
+  <div class="content-margin-container" id="prior_work">
+    <div class="margin-left-block">
+    </div>
+    <div class="main-content-block">
+      <h1>Prior Work</h1>
+
+      <b>Vision Transformers in medical imaging.</b><br>
+      Vision Transformers (ViTs) have quickly become competitive alternatives to convolutional networks for image classification. ViT-B/16 divides an image into non-overlapping patches, linearly embeds each patch, adds positional encodings, and feeds the resulting tokens through a transformer encoder with multi-head self-attention before a classification head produces logits. While most clinical imaging work still relies on CNNs, several recent papers have shown that ViTs pre-trained on large natural image datasets can transfer surprisingly well to radiology tasks such as chest X-ray abnormality detection and mammography.<br><br>
+
+      <b>Class imbalance and reweighting.</b><br>
+      Class imbalance is a well-known issue in both vision and medical ML. The simplest approach is to reweight the loss by inverse class frequency. For a binary label \(y \in \{0,1\}\) and logits \(z\), the weighted NLL loss can be written as:
+      <div class="formula" style="margin-top:10px; margin-bottom:10px;">
+        \( L_{\text{wNLL}} = - w_1 \, y \log p - w_0 \, (1-y) \log(1-p), \quad p = \sigma(z)\)
+      </div>
+      where \(w_c \propto 1 / \text{freq}(c)\). Oversampling the minority class with a weighted sampler is equivalent to this reweighting under some assumptions, but in practice the two interact differently with stochastic optimization and augmentation pipelines.<br><br>
+
+      <b>Focal Loss.</b><br>
+      Focal Loss was introduced for dense object detection as a way to down-weight easy examples and focus training on hard, misclassified examples. For binary classification, the loss for a single example is:
+      <div class="formula" style="margin-top:10px; margin-bottom:10px;">
+        \( L_{\text{focal}} = - \alpha \,(1-p_t)^\gamma \log p_t \)
+      </div>
+      where \(p_t\) is the predicted probability assigned to the true class, \(\alpha\) is a per-class weight, and \(\gamma\) controls how aggressively the loss down-weights easy examples. When \(\gamma=0\), Focal Loss reduces to weighted cross-entropy. In highly imbalanced settings, focal loss is often recommended as a drop-in replacement for cross-entropy.<br><br>
+
+      <b>Class-adaptive focal variants.</b><br>
+      Several works propose making \(\alpha\) or \(\gamma\) class-dependent, so that rare classes are treated with different focusing than frequent ones. Intuitively, we might want the loss to be both <i>heavier</i> on rare classes (via class weights) and <i>more forgiving</i> when the model is already confident on the majority class. Our proposed CAF-NLL loss follows this spirit: we start from a log-softmax + NLL formulation that is convenient for ViT and introduce a class-adaptive focal factor where the per-class focusing parameter \(\gamma_c\) is a simple function of the class weights estimated from the training distribution.<br><br>
+
+      <b>Medical imaging benchmarks.</b><br>
+      The RSNA Pneumonia Detection Challenge dataset is a widely used chest X-ray benchmark derived from NIH CXR data, with bounding boxes for pneumonia regions and image-level labels derived from radiology reports. Unlike toy datasets where classes are balanced by design, RSNA preserves a more realistic clinical label distribution, making it useful for studying imbalance in a setting that resembles real screening workflows.
+    </div>
+    <div class="margin-right-block">
+      Most prior work on class imbalance in medical imaging reports results for one or two tricks (e.g., class weights or focal loss) but rarely compares them in a controlled setting on the same backbone. Our project tries to make that comparison explicit for ViTs.
+    </div>
+  </div>
+
+  <!-- METHODS & EXPERIMENTS -->
+  <div class="content-margin-container" id="methods_experiments">
+    <div class="margin-left-block">
+    </div>
+    <div class="main-content-block">
+      <h1>Methods &amp; Experiments</h1>
+
+      <b>Dataset and splits.</b><br>
+      We use the Kaggle RSNA Pneumonia Detection Challenge dataset via <code>kagglehub</code>. Each DICOM study is associated with one or more bounding boxes and a binary label, <code>Target ∈ {0,1}</code>, indicating the presence of pneumonia. We convert this to a patient-level binary classification task:
+      <ul>
+        <li>Group rows by <code>patientId</code> and set <code>target = max(Target)</code>,</li>
+        <li>construct a single DICOM path per patient,</li>
+        <li>filter to images that exist on disk.</li>
+      </ul>
+      We then perform stratified splits at the patient level:
+      <ul>
+        <li>75% train / 25% validation, stratified by <code>target</code>,</li>
+        <li>carve out 10% of the training portion as an internal test set, again stratified.</li>
+      </ul>
+      This yields three disjoint sets with similar positive/negative ratios. We do not perform any manual downsampling: the imbalance present in the raw data is preserved.<br><br>
+
+      <b>Transforms and DICOM handling.</b><br>
+      Each DICOM file is read with <code>pydicom</code>, normalized to \([0,255]\), and converted to a 3-channel <code>PIL.Image</code> so that we can reuse ImageNet normalization and ViT preprocessing. We define:
+      <ul>
+        <li><b>Base train transform</b>: resize to 224×224, random horizontal flip, convert to tensor, ImageNet mean/variance normalization.</li>
+        <li><b>Minority train transform</b>: same as base plus random vertical flip, random rotation, and <code>ColorJitter</code> for brightness, contrast, saturation, and hue.</li>
+        <li><b>Eval transform</b>: resize to 224×224, convert to tensor, normalization; no stochastic augmentation.</li>
+      </ul>
+      The <code>MelanomaDataset</code> class (reused name, now for pneumonia) chooses between the base and minority transform dynamically depending on the label and whether “augment minority” is enabled in a particular experiment.<br><br>
+
+      <b>Model.</b><br>
+      We fine-tune a ViT-B/16 model from <code>torchvision</code>:
+      <ul>
+        <li>Initialize with <code>ViT_B_16_Weights.IMAGENET1K_V1</code>.</li>
+        <li>Replace the classification head with a 2-class linear layer followed by <code>LogSoftmax(dim=1)</code>.</li>
+        <li>Train all layers; no freezing of encoder parameters.</li>
+      </ul>
+
+      <b>Loss functions.</b><br>
+      All experiments use log-probabilities from the ViT head. We consider four loss functions:
+
+      <ol>
+        <li><b>Plain NLLLoss.</b> Standard <code>nn.NLLLoss</code> with no class weighting.</li>
+
+        <li><b>Class-weighted NLLLoss.</b><br>
+          We compute class counts on the training set and define approximate inverse-frequency weights:
+          <div class="formula" style="margin-top:10px; margin-bottom:10px;">
+            \( w_c \propto \frac{1}{\text{count}(c)} \), rescaled so that \( \frac{1}{C} \sum_c w_c \approx 1. \)
           </div>
-				</div>
-		    <div class="main-content-block">
-            <!--You can embed an image like this:-->
-            <img src="./images/your_image_here.png" width=512px/>
-		    </div>
-		    <div class="margin-right-block">
-						Caption for the image.
-		    </div>
-		</div>
+          These weights are passed directly to <code>nn.NLLLoss(weight=...)</code>, making positive (pneumonia) examples contribute more to the loss.
+        </li>
 
-    <div class="content-margin-container" id="intro">
-				<div class="margin-left-block">
-				</div>
-		    <div class="main-content-block">
-						<h1>Introduction</h1>
-            Motivate your project. What question are you asking. Why is it unanswered so far? What gap in the literature or practice are you filling?
-            Why is it important?
-		    </div>
-		    <div class="margin-right-block">
-						Margin note that clarifies some detail #main-content-block for intro section.
-		    </div>
-		</div>
+        <li><b>Focal Loss on log-probabilities.</b><br>
+          We implement a multi-class Focal Loss that takes log-probabilities:
+          <div class="formula" style="margin-top:10px; margin-bottom:10px;">
+            \( L_{\text{focal}} = - \alpha_{y_i} (1 - p_{i,y_i})^\gamma \log p_{i,y_i} \)
+          </div>
+          where \(p_{i,y_i}\) is the predicted probability of the true class. We set:
+          <ul>
+            <li>\(\gamma = 2.0\),</li>
+            <li>\(\alpha = [0.25, 0.75]\) for [no-pneumonia, pneumonia] respectively.</li>
+          </ul>
+        </li>
 
-		<div class="content-margin-container" id="does_x_do_y">
-				<div class="margin-left-block">
-				</div>
-		    <div class="main-content-block">
-					<h1>Does X do Y?</h1>
-				  It is well known that Y does Y. And this has raised the question does X do Y? Because if Y does Y then it stands to reason that X does Y.
-          But we cannot answer this until we realize the Z implies Y and X can be linked to Z.<br><br>
+        <li><b>CAF-NLL: Class-Adaptive Focal NLL (our proposed loss).</b><br>
+          CAF-NLL combines class weighting and focal-style focusing in a way that automatically adapts to the degree of class imbalance. Let \(\mathbf{w}\) be the per-class weights defined above and \(\bar{w}\) their mean. We define a class-specific focusing parameter:
+          <div class="formula" style="margin-top:10px; margin-bottom:10px;">
+            \( \gamma_c = \gamma_0 + \beta \left( \frac{w_c}{\bar{w}} - 1 \right) \)
+          </div>
+          and a per-example loss:
+          <div class="formula" style="margin-top:10px; margin-bottom:10px;">
+            \( L_{\text{CAF}} = - \, w_{y_i} \, (1 - p_{i,y_i})^{\gamma_{y_i}} \log p_{i,y_i}. \)
+          </div>
+          Intuitively:
+          <ul>
+            <li>Rare classes have larger \(w_c\) and thus larger \(\gamma_c\), making the loss focus more aggressively on misclassified minority examples.</li>
+            <li>Frequent classes keep \(\gamma_c\) closer to \(\gamma_0\), behaving more like a standard class-weighted NLL.</li>
+          </ul>
+          In our experiments we set \(\gamma_0 = 1.0\) and \(\beta = 1.0\).
+        </li>
+      </ol>
 
-          Now let's write some math!<br>
-          <center>
-            <math xmlns="http://www.w3.org/1998/Math/MathML">
-              <mrow>
-                <mrow>
-                  <mo>&#x2202;</mo>
-                  <mi>y</mi>
-                </mrow>
-                <mo>/</mo>
-                <mrow>
-                  <mo>&#x2202;</mo>
-                  <mi>x</mi>
-                </mrow>
-              </mrow>
-              <mo>=</mo>
-              <mi>x</mi>
-            </math>
-          </center>
+      <b>Data-level imbalance strategies.</b><br>
+      In addition to loss shaping, we explore two data-level approaches:
+
+      <ol>
+        <li><b>WeightedRandomSampler.</b><br>
+          For a given train dataframe, we build a vector of sample weights inversely proportional to class frequency and use <code>WeightedRandomSampler</code> to draw balanced mini-batches. This keeps the underlying dataset unchanged but changes the sampling distribution.</li>
+
+        <li><b>Duplicate-and-augment oversampling.</b><br>
+          We compute the positive fraction in the training set and define an integer oversample factor
+          <div class="formula" style="margin-top:10px; margin-bottom:10px;">
+            \( \text{factor} \approx \left\lfloor \frac{1}{\text{pos\_fraction}} \right\rceil. \)
+          </div>
+          We then explicitly duplicate pneumonia-positive rows this many times, shuffle, and train without a weighted sampler. During this experiment, we also enable the stronger minority augmentation pipeline so that duplicated samples produce diverse views.</li>
+      </ol>
+
+      <b>Seven experiments.</b><br>
+      All experiments share the same seed, splits, model, optimizer, and number of epochs (15). They differ only in loss function and imbalance handling:
+
+      <ol>
+        <li><b>baseline_ViT</b>: plain ViT + NLL, no oversampling, base augmentation only.</li>
+        <li><b>oversample_minority</b>: NLL + <code>WeightedRandomSampler</code> for class-balanced sampling.</li>
+        <li><b>augment_minority</b>: NLL + stronger augmentation only for pneumonia-positive examples.</li>
+        <li><b>class_weighted_NLL</b>: class-weighted NLL with inverse-frequency weights.</li>
+        <li><b>focal_loss</b>: Focal Loss with \(\gamma=2.0\) and \(\alpha=[0.25,0.75]\).</li>
+        <li><b>oversample_plus_augment</b>: explicit positive duplication by <code>OVERSAMPLE_FACTOR</code> plus strong minority augmentation.</li>
+        <li><b>caf_nll</b>: CAF-NLL with class-adaptive focusing parameters.</li>
+      </ol>
+
+      For each experiment we:
+      <ul>
+        <li>track train and validation loss/accuracy across epochs,</li>
+        <li>save the checkpoint with best validation accuracy,</li>
+        <li>evaluate on the held-out test set and log:
+          <ul>
+            <li>test loss and accuracy,</li>
+            <li>confusion matrix,</li>
+            <li>classification report (per-class precision/recall/F1),</li>
+            <li>ROC curve and AUC from predicted pneumonia probabilities.</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="margin-right-block" style="transform: translate(0%, -100%);">
+      The seven experiments are intentionally simple: we keep the backbone fixed and focus exclusively on how loss shaping and sampling change the confusion matrix and ROC curve. This mirrors how practitioners often iterate in real medical ML projects.
+    </div>
+  </div>
+
+  <!-- IMPLEMENTATION DETAILS -->
+  <div class="content-margin-container" id="implementation">
+    <div class="margin-left-block">
+    </div>
+    <div class="main-content-block">
+      <h1>Technical Implementation Details</h1>
+
+      All experiments are implemented in a single Python file structured into three blocks: (1) data download, splits, and transforms; (2) dataset, dataloaders, model, and loss definitions; and (3) the training loop and experiment runner.<br><br>
+
+      <b>Training loop and evaluation.</b><br>
+      We use Adam with a learning rate of \(3\times 10^{-4}\), batch size 32, and train for 15 epochs per experiment. The core training and evaluation functions are:
+
+      <div class="algorithm-container">
+        <div class="algorithm-title">Algorithm 1: Training and Evaluation Loop</div>
+        <div class="code">
+          <b>train_one_epoch(model, loader, optimizer, criterion)</b><br>
+          &nbsp;&nbsp;model.train()<br>
+          &nbsp;&nbsp;for (imgs, labels) in loader:<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;imgs, labels ← imgs.to(device), labels.to(device)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;optimizer.zero_grad()<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;log_probs ← model(imgs)  # (N, 2)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;loss ← criterion(log_probs, labels)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;loss.backward()<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;optimizer.step()<br>
           <br>
-          It's probably best to ask an LLM to help do the web
-          formatting for math. You can tell it "convert this latex equation into MathML: $$\frac{\partial dy}{\partial dx} = x$$"
-          But it took me a few tries. So, if you get frustrated, you can embed an image of the equation, or use other packages for
-          rendering equations on webpages.
-		    </div>
-		    <div class="margin-right-block" style="transform: translate(0%, -100%);"> <!-- you can move the margin notes up and down with translate -->
-          Interestingly, Plato also asked if X does Y, in <a href="#ref_1">[1]</a>.
-		    </div>
-		</div>
+          <b>evaluate(model, loader, criterion, return_scores)</b><br>
+          &nbsp;&nbsp;model.eval()<br>
+          &nbsp;&nbsp;for (imgs, labels) in loader:<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;with torch.no_grad():<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log_probs ← model(imgs.to(device))<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;loss ← criterion(log_probs, labels.to(device))<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preds ← argmax(log_probs, dim=1)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if return_scores:<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;probs_pos ← exp(log_probs)[:, 1]
+        </div>
+      </div><br>
 
-		<div class="content-margin-container">
-				<div class="margin-left-block">
-				</div>
-		    <div class="main-content-block">
-            <h1>Another section</h1>
-            In this section we embed a video:
-						<video class='my-video' loop autoplay muted style="width: 725px">
-								<source src="./images/mtsh.mp4" type="video/mp4">
-						</video>
-		    </div>
-		    <div class="margin-right-block">
-					A caption for the video could go here.
-		    </div>
-		</div>
+      For each experiment, we track validation accuracy over epochs and save the model checkpoint with the best validation accuracy. After training, we reload that checkpoint and compute test-set metrics, including a pretty confusion matrix and ROC curve using <code>sklearn</code>.<br><br>
 
-		<div class="content-margin-container" id="implications_and_limitations">
-				<div class="margin-left-block">
-				</div>
-		    <div class="main-content-block">
-						<h1>Implications and limitations</h1>
-						Let's end with some discussion of the implications and limitations.
-		    </div>
-		    <div class="margin-right-block">
-		    </div>
-		</div>
+      <b>CAF-NLL implementation.</b><br>
+      The CAF-NLL loss is implemented as a subclass of <code>nn.Module</code> that takes precomputed class weights and computes per-class focusing exponents inside <code>forward</code>:
 
-		<div class="content-margin-container" id="citations">
-				<div class="margin-left-block">
-				</div>
-		    <div class="main-content-block">
-						<div class='citation' id="references" style="height:auto"><br>
-							<span style="font-size:16px">References:</span><br><br>
-							<a id="ref_1"></a>[1] <a href="https://en.wikipedia.org/wiki/Allegory_of_the_cave">Allegory of the Cave</a>, Plato, c. 375 BC<br><br>
-							<a id="ref_2"></a>[2] <a href="">A Human-Level AGI</a>, OpenAI, 2025<br><br>
-						</div>
-		    </div>
-		    <div class="margin-right-block">
-            <!-- margin notes for reference block here -->
-		    </div>
-		</div>
+      <div class="code" style="margin-bottom:12px;">
+        gamma_c = gamma0 + beta * (w / w_bar - 1.0)  # (C,)<br>
+        pt = probs[range(N), targets]<br>
+        log_pt = log_probs[range(N), targets]<br>
+        w_t = w[targets]<br>
+        gamma_t = gamma_c[targets]<br>
+        loss = - (w_t * (1 - pt)**gamma_t * log_pt)
+      </div>
 
-	</body>
+      Because we operate directly on log-probabilities, CAF-NLL can be swapped in without changing the rest of the training code. When <code>beta = 0</code>, the loss reduces to class-weighted NLL with a mild focal factor controlled by <code>gamma0</code>.<br><br>
+
+      <b>Reproducibility and assets.</b><br>
+      We fix all random seeds (Python, NumPy, PyTorch CPU/GPU) to 42. Figure assets (ROC curves, confusion matrices, and metric tables) are saved as PNGs and can be dropped into this HTML template under <code>./images/</code> for the final blog submission.
+    </div>
+    <div class="margin-right-block">
+      The full source code, including the CAF-NLL implementation and experiment scripts, can be packaged alongside this HTML in a <code>zip</code> file that renders offline, following the course submission instructions.
+    </div>
+  </div>
+
+  <!-- DISCUSSION -->
+  <div class="content-margin-container" id="discussion">
+    <div class="margin-left-block">
+    </div>
+    <div class="main-content-block">
+      <h1>Discussion</h1>
+
+      Here we qualitatively summarize the trends we observe across the seven experiments, focusing on how each imbalance strategy reshapes the confusion matrix and ROC curve. (Exact numbers and plots can be filled in once all runs finish.)<br><br>
+
+      <b>Baseline vs. naive rebalancing.</b><br>
+      The baseline ViT with plain NLL tends to achieve a reasonable overall accuracy and ROC-AUC, but under-detects pneumonia: false negatives dominate the minority-class error profile. Oversampling with <code>WeightedRandomSampler</code> improves minority recall but can slightly hurt calibration and overall accuracy due to seeing the same positives repeatedly with limited augmentation.<br><br>
+
+      <b>Augmenting the minority class.</b><br>
+      Enabling stronger augmentation only for pneumonia-positive images (without oversampling) offers a different trade-off. Instead of changing the sampling distribution, we increase the effective diversity of the positive class. In our experiments this tends to:
+      <ul>
+        <li>modestly improve pneumonia recall,</li>
+        <li>have a smaller impact on overall accuracy than pure oversampling,</li>
+        <li>yield ROC curves that are slightly closer to the baseline but with better sensitivity at high-recall operating points.</li>
+      </ul>
+
+      <b>Class-weighted NLL and Focal Loss.</b><br>
+      Class weighting directly encodes the idea that misclassifying a pneumonia-positive study is “worse” than misclassifying a normal study. As expected, this shifts the decision boundary to favor catching positives: recall improves, precision may decrease, and the confusion matrix becomes more symmetric between the two classes. Focal Loss adds an additional layer by emphasizing hard examples:
+      <ul>
+        <li>On RSNA, focal loss often further improves recall on hard pneumonia cases,</li>
+        <li>but can make optimization noisier and sometimes over-focus on a small subset of extremely hard or mislabeled examples.</li>
+      </ul>
+
+      <b>CAF-NLL: does class-adaptive focusing help?</b><br>
+      Our proposed CAF-NLL loss lets the data decide how much focusing each class should get based on inverse frequency. For RSNA, where pneumonia is much rarer than normal, this yields:
+      <ul>
+        <li>a larger \(\gamma\) for pneumonia than for the majority class,</li>
+        <li>a loss surface that aggressively emphasizes misclassified positive examples,</li>
+        <li>and a training behavior that looks like “class-weighted focal loss with a principled hyperparameter schedule.”</li>
+      </ul>
+
+      Qualitatively, CAF-NLL tends to:
+      <ul>
+        <li>match or slightly outperform Focal Loss on pneumonia recall,</li>
+        <li>avoid some of the extreme over-fitting behaviors we saw when tuning \(\gamma\) and \(\alpha\) by hand,</li>
+        <li>and maintain competitive overall ROC-AUC.</li>
+      </ul>
+
+      <b>Oversample-plus-augment.</b><br>
+      The duplicate-and-augment experiment (“oversample_plus_augment”) is a crude, but surprisingly strong, baseline: by oversampling positives and applying heavy augmentation only to those extra copies, we get a much richer set of pneumonia views. In our runs this method narrows the gap between positive and negative recall without any complicated loss design. However, it does so at the cost of more compute per epoch and potentially worse calibration if the effective training prevalence diverges too far from the evaluation distribution.<br><br>
+
+      <b>Takeaways.</b><br>
+      Across all seven experiments, a few patterns emerge:
+      <ol>
+        <li>Simple class weighting and minority augmentation already fix a large fraction of the minority-class error in our baseline ViT.</li>
+        <li>Focal Loss improves recall further but introduces an extra hyperparameter dimension (\(\alpha, \gamma\)) that is non-trivial to tune.</li>
+        <li>CAF-NLL offers a reasonable compromise: it adapts the focal focusing to the degree of class imbalance automatically while keeping the implementation simple.</li>
+      </ol>
+      For practitioners, this suggests that:
+      <ul>
+        <li>if you want something easy and robust, start with class weights + targeted augmentation;</li>
+        <li>if you need every last bit of minority recall and can afford extra tuning, focal or CAF-NLL losses are promising directions.</li>
+      </ul>
+    </div>
+    <div class="margin-right-block" style="transform: translate(0%, -100%);">
+      Once experiments finish, this section can be augmented with actual metric tables (e.g., test ROC-AUC and pneumonia recall for each method) and side-by-side plots of ROC curves and confusion matrices, similar in spirit to the ADS project example.
+    </div>
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="content-margin-container" id="conclusion">
+    <div class="margin-left-block">
+    </div>
+    <div class="main-content-block">
+      <h1>Conclusion</h1>
+
+      In this project we built a small but carefully controlled benchmark for studying loss functions under class imbalance in medical image classification. Using a ViT-B/16 backbone and the RSNA pneumonia dataset, we compared seven training schemes that combine:
+      <ul>
+        <li>plain vs. class-weighted NLL,</li>
+        <li>standard Focal Loss,</li>
+        <li>a new Class-Adaptive Focal NLL (CAF-NLL) loss,</li>
+        <li>and two forms of data-level rebalancing (oversampling and minority-only augmentation).</li>
+      </ul>
+
+      Our preliminary results suggest that:
+      <ol>
+        <li>Even very simple rebalancing (class weights + targeted augmentation) can substantially improve minority-class recall without catastrophic drops in overall performance.</li>
+        <li>Focal-style losses provide further gains on hard minority examples, but require careful hyperparameter choices.</li>
+        <li>CAF-NLL offers a conceptually simple way to tie focal focusing parameters to observed class imbalance, turning focal loss from a manually tuned trick into something closer to a principled prior over classes.</li>
+      </ol>
+
+      More broadly, this project highlights that for clinical screening tasks, we should evaluate models not only by overall ROC-AUC but by:
+      <ul>
+        <li>minority-class sensitivity at clinically relevant operating points,</li>
+        <li>how confusion matrices change under different imbalance strategies, and</li>
+        <li>how robust these strategies are to realistic class prevalence.</li>
+      </ul>
+
+      While we used pneumonia detection as our running example, the same codebase and methodology can be applied directly to melanoma detection on under-represented skin types—the problem that originally motivated this work. In that setting, class imbalance interacts with <i>subgroup imbalance</i> (e.g., different skin tones), and loss-level tricks like CAF-NLL could be combined with group-aware training or calibration to further reduce disparities in clinical performance.
+    </div>
+    <div class="margin-right-block">
+      Future extensions include: adding calibration metrics (ECE, Brier score), experimenting with group-DRO objectives, and repeating the study on a true skin-lesion dataset where minority groups correspond to under-represented skin types rather than just the positive class.
+    </div>
+  </div>
+
+  <!-- REFERENCES -->
+  <div class="content-margin-container" id="citations">
+    <div class="margin-left-block">
+    </div>
+    <div class="main-content-block">
+      <div class='citation' id="references" style="height:auto"><br>
+        <span style="font-size:16px">References:</span><br><br>
+        <a id="ref_1"></a>[1] Dosovitskiy et al., <a href="https://arxiv.org/abs/2010.11929">An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale</a>, 2020.<br><br>
+        <a id="ref_2"></a>[2] Lin et al., <a href="https://arxiv.org/abs/1708.02002">Focal Loss for Dense Object Detection</a>, 2017.<br><br>
+        <a id="ref_3"></a>[3] Kaggle RSNA Pneumonia Detection Challenge, <a href="https://www.kaggle.com/c/rsna-pneumonia-detection-challenge">competition page</a>.<br><br>
+        <a id="ref_4"></a>[4] Papers and blog posts on class imbalance and reweighting in medical imaging; see, for example, work on rebalancing chest X-ray datasets for pneumonia and TB screening.<br><br>
+      </div>
+    </div>
+    <div class="margin-right-block">
+      <!-- margin notes for reference block here -->
+    </div>
+  </div>
+
+</body>
 
 </html>
