@@ -4,6 +4,19 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <link rel="shortcut icon" href="images/icon.ico">
+
+<!-- MathJax for LaTeX rendering -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
 <style type="text/css">
 	body {
 		background-color: #f5f9ff;
@@ -28,8 +41,9 @@
 		background-color: #fff;
 		border-left: 1px solid #DDD;
 		border-right: 1px solid #DDD;
-		padding: 8px 8px 8px 8px;
+		padding: 8px 24px 16px 24px;
 		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+		box-shadow: 0 4px 8px rgba(0,0,0,0.03);
 	}
 	.margin-left-block {
 			font-size: 14px;
@@ -78,8 +92,8 @@
 	}
 
 	h1 {
-		font-size: 18px;
-		margin-top: 4px;
+		font-size: 22px;
+		margin-top: 12px;
 		margin-bottom: 10px;
 	}
 
@@ -124,10 +138,10 @@
 
 	div.hypothesis {
 		width: 80%;
-		background-color: #EEE;
-		border: 1px solid black;
+		background-color: #EEF6FF;
+		border: 1px solid #C6D8FF;
 		border-radius: 10px;
-		font-family: Courier;
+		font-family: Courier, monospace;
 		font-size: 18px;
 		text-align: center;
 		margin: auto;
@@ -178,35 +192,42 @@
 	}
 
   .algorithm-container {
-		max-width: 600px;
-		margin: 0 auto;
-		padding: 20px;
-		background-color: #f9f9f9;
-		border: 1px solid #ddd;
-		border-radius: 5px;
+		max-width: 700px;
+		margin: 8px auto 0 auto;
+		padding: 16px 18px;
+		background-color: #f5f7fb;
+		border: 1px solid #d0d7f2;
+		border-radius: 8px;
 		text-align: left;
 		display: block;
+		box-shadow: 0 3px 6px rgba(0,0,0,0.04);
 	}
 	.algorithm-title {
 		font-weight: bold;
 		margin-bottom: 10px;
+		font-size: 16px;
 	}
 	.code {
 		font-family: "Courier New", Courier, monospace;
-		background: #f4f4f4;
-		padding: 10px;
-		border-radius: 5px;
-		border: 1px solid #ccc;
+		background: #fdfdff;
+		padding: 10px 12px;
+		border-radius: 6px;
+		border: 1px solid #e1e4f2;
 		text-align: left;
 		display: block;
+		overflow-x: auto;
+		font-size: 14px;
+		line-height: 1.4;
 	}
   .formula {
     font-family: "Courier New", monospace;
-    background-color: #f4f4f4;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    background-color: #fdfdff;
+    padding: 10px 14px;
+    border-radius: 6px;
+    border: 1px solid #e1e4f2;
     display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
   li {
     margin-bottom: 12px;
@@ -337,20 +358,24 @@
 
       <b>Class imbalance and reweighting.</b><br>
       Class imbalance is a well-known issue in both vision and medical ML. The simplest approach is to reweight the loss by inverse class frequency. For a binary label y ∈ {0,1} and predicted probability p = σ(z), the weighted NLL loss can be written as:
-      <div class="formula" style="margin-top:10px; margin-bottom:10px;">
-        L_wNLL = - w1 * y * log(p) - w0 * (1 - y) * log(1 - p)
+      <div class="formula">
+        \[
+          L_{\text{wNLL}} = -\, w_1\, y \,\log(p)\;-\; w_0\, (1 - y)\, \log(1 - p)
+        \]
       </div>
-      where w_c ∝ 1 / freq(c). These weights are passed directly into NLLLoss so that minority-class errors are penalized more heavily.<br><br>
+      where \(w_c \propto 1 / \text{freq}(c)\). These weights are passed directly into NLLLoss so that minority-class errors are penalized more heavily.<br><br>
 
       <b>Focal Loss.</b><br>
-      Focal Loss was introduced for dense object detection as a way to down-weight easy examples and focus training on hard, misclassified examples. For one example with true class y and predicted probability p_t assigned to that class:
-      <div class="formula" style="margin-top:10px; margin-bottom:10px;">
-        L_focal = - alpha_y * (1 - p_t)^gamma * log(p_t)
+      Focal Loss was introduced for dense object detection as a way to down-weight easy examples and focus training on hard, misclassified examples. For one example with true class y and predicted probability \(p_{\text{true}}\) assigned to that class:
+      <div class="formula">
+        \[
+          L_{\text{focal}} = -\, \alpha_y \, (1 - p_{\text{true}})^{\gamma} \, \log\!\bigl(p_{\text{true}}\bigr)
+        \]
       </div>
-      When gamma = 0, Focal Loss reduces to weighted cross-entropy. With gamma &gt; 0, easy examples with p_t close to 1 contribute less to the gradient, allowing the optimizer to focus on harder cases.<br><br>
+      When \(\gamma = 0\), Focal Loss reduces to weighted cross-entropy. With \(\gamma &gt; 0\), easy examples with \(p_{\text{true}}\) close to 1 contribute less to the gradient, allowing the optimizer to focus on harder cases.<br><br>
 
       <b>Class-adaptive focal variants.</b><br>
-      Several works propose making either alpha or gamma class-dependent, so that rare classes receive both higher weight and stronger focusing. Our CAF-NLL loss follows this spirit: we start from log-softmax + NLL (convenient for ViT) and introduce a class-adaptive focal factor where the per-class focusing parameter gamma_c is a simple function of the class weights.<br><br>
+      Several works propose making either alpha or gamma class-dependent, so that rare classes receive both higher weight and stronger focusing. Our CAF-NLL loss follows this spirit: we start from log-softmax + NLL (convenient for ViT) and introduce a class-adaptive focal factor where the per-class focusing parameter \(\gamma_c\) is a simple function of the class weights.<br><br>
 
       <b>Medical imaging benchmarks.</b><br>
       The RSNA Pneumonia Detection Challenge dataset is a widely used chest X-ray benchmark derived from NIH CXR data, with bounding boxes for pneumonia regions and image-level labels derived from radiology reports. Unlike toy datasets where classes are balanced by design, RSNA preserves a more realistic clinical label distribution, making it useful for studying imbalance in a setting that resembles real screening workflows.
@@ -406,30 +431,38 @@
 
         <li><b>Class-weighted NLLLoss.</b><br>
           We compute class counts on the training set and define approximate inverse-frequency weights:
-          <div class="formula" style="margin-top:10px; margin-bottom:10px;">
-            w_c ∝ 1 / count(c), rescaled so that the mean of w_c over classes is approximately 1.0
+          <div class="formula">
+            \[
+              w_c \propto \frac{1}{\text{count}(c)}, \quad \text{rescaled so that the mean of } w_c \text{ over classes is approximately } 1.0
+            \]
           </div>
           These weights are passed directly to <code>nn.NLLLoss(weight=...)</code>, making positive (pneumonia) examples contribute more to the loss.
         </li>
 
         <li><b>Focal Loss on log-probabilities.</b><br>
           We implement a multi-class Focal Loss that takes log-probabilities:
-          <div class="formula" style="margin-top:10px; margin-bottom:10px;">
-            L_focal = - alpha_y * (1 - p_true)^gamma * log(p_true)
+          <div class="formula">
+            \[
+              L_{\text{focal}} = -\, \alpha_y \, (1 - p_{\text{true}})^{\gamma} \, \log\!\bigl(p_{\text{true}}\bigr)
+            \]
           </div>
-          where <code>p_true</code> is the predicted probability of the true class. We set gamma = 2.0 and alpha = [0.25, 0.75] for [no-pneumonia, pneumonia] respectively.
+          where \(p_{\text{true}}\) is the predicted probability of the true class. We set \(\gamma = 2.0\) and \(\alpha = [0.25, 0.75]\) for [no-pneumonia, pneumonia] respectively.
         </li>
 
         <li><b>CAF-NLL: Class-Adaptive Focal NLL (our proposed loss).</b><br>
-          CAF-NLL combines class weighting and focal-style focusing in a way that automatically adapts to the degree of class imbalance. Let w be the per-class weights defined above and w_bar their mean. We define a class-specific focusing parameter:
-          <div class="formula" style="margin-top:10px; margin-bottom:10px;">
-            gamma_c = gamma0 + beta * (w_c / w_bar - 1)
+          CAF-NLL combines class weighting and focal-style focusing in a way that automatically adapts to the degree of class imbalance. Let w be the per-class weights defined above and \(\bar{w}\) their mean. We define a class-specific focusing parameter:
+          <div class="formula">
+            \[
+              \gamma_c = \gamma_0 + \beta \left( \frac{w_c}{\bar{w}} - 1 \right)
+            \]
           </div>
           and a per-example loss:
-          <div class="formula" style="margin-top:10px; margin-bottom:10px;">
-            L_CAF = - w_y * (1 - p_true)^(gamma_y) * log(p_true)
+          <div class="formula">
+            \[
+              L_{\text{CAF}} = -\, w_y \, (1 - p_{\text{true}})^{\gamma_y} \, \log\!\bigl(p_{\text{true}}\bigr)
+            \]
           </div>
-          Intuitively, rare classes have larger w_c and thus larger gamma_c, making the loss focus more aggressively on misclassified minority examples. Frequent classes keep gamma_c closer to gamma0, behaving more like a standard class-weighted NLL. In our experiments we set gamma0 = 1.0 and beta = 1.0.
+          Intuitively, rare classes have larger \(w_c\) and thus larger \(\gamma_c\), making the loss focus more aggressively on misclassified minority examples. Frequent classes keep \(\gamma_c\) closer to \(\gamma_0\), behaving more like a standard class-weighted NLL. In our experiments we set \(\gamma_0 = 1.0\) and \(\beta = 1.0\).
         </li>
       </ol>
 
@@ -441,9 +474,11 @@
           For a given train dataframe, we build a vector of sample weights inversely proportional to class frequency and use <code>WeightedRandomSampler</code> to draw balanced mini-batches. This keeps the underlying dataset unchanged but changes the sampling distribution.</li>
 
         <li><b>Duplicate-and-augment oversampling.</b><br>
-          We compute the positive fraction in the training set and define an integer oversample factor:
-          <div class="formula" style="margin-top:10px; margin-bottom:10px;">
-            OVERSAMPLE_FACTOR ≈ round(1.0 / pos_fraction)
+          We compute the positive fraction in the training set and define an integer oversample factor. Let \(f_{\text{pos}}\) denote the positive-class fraction and \(k_{\text{over}}\) the oversampling multiplier:
+          <div class="formula">
+            \[
+              k_{\text{over}} \approx \operatorname{round}\!\left(\frac{1.0}{f_{\text{pos}}}\right)
+            \]
           </div>
           We then explicitly duplicate pneumonia-positive rows this many times, shuffle, and train without a weighted sampler. During this experiment, we also enable the stronger minority augmentation pipeline so that duplicated samples produce diverse views.</li>
       </ol>
@@ -456,8 +491,8 @@
         <li><b>oversample_minority</b>: NLL + <code>WeightedRandomSampler</code> for class-balanced sampling.</li>
         <li><b>augment_minority</b>: NLL + stronger augmentation only for pneumonia-positive examples.</li>
         <li><b>class_weighted_NLL</b>: class-weighted NLL with inverse-frequency weights.</li>
-        <li><b>focal_loss</b>: Focal Loss with gamma = 2.0 and alpha = [0.25, 0.75].</li>
-        <li><b>oversample_plus_augment</b>: explicit positive duplication by <code>OVERSAMPLE_FACTOR</code> plus strong minority augmentation.</li>
+        <li><b>focal_loss</b>: Focal Loss with \(\gamma = 2.0\) and \(\alpha = [0.25, 0.75]\).</li>
+        <li><b>oversample_plus_augment</b>: explicit positive duplication by \(k_{\text{over}}\) plus strong minority augmentation.</li>
         <li><b>caf_nll</b>: CAF-NLL with class-adaptive focusing parameters.</li>
       </ol>
 
@@ -495,25 +530,25 @@
       <div class="algorithm-container">
         <div class="algorithm-title">Algorithm 1: Training and Evaluation Loop</div>
         <div class="code">
-          train_one_epoch(model, loader, optimizer, criterion):<br>
-          &nbsp;&nbsp;model.train()<br>
-          &nbsp;&nbsp;for (imgs, labels) in loader:<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;imgs, labels = imgs.to(device), labels.to(device)<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;optimizer.zero_grad()<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;log_probs = model(imgs)  # (N, 2)<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;loss = criterion(log_probs, labels)<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;loss.backward()<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;optimizer.step()<br>
-          <br>
-          evaluate(model, loader, criterion, return_scores):<br>
-          &nbsp;&nbsp;model.eval()<br>
-          &nbsp;&nbsp;for (imgs, labels) in loader:<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;with torch.no_grad():<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log_probs = model(imgs.to(device))<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;loss = criterion(log_probs, labels.to(device))<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preds = argmax(log_probs, dim=1)<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if return_scores:<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;probs_pos = exp(log_probs)[:, 1]
+train_one_epoch(model, loader, optimizer, criterion):<br>
+&nbsp;&nbsp;model.train()<br>
+&nbsp;&nbsp;for (imgs, labels) in loader:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;imgs, labels = imgs.to(device), labels.to(device)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;optimizer.zero_grad()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;log_probs = model(imgs)  # (N, 2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;loss = criterion(log_probs, labels)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;loss.backward()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;optimizer.step()<br>
+<br>
+evaluate(model, loader, criterion, return_scores):<br>
+&nbsp;&nbsp;model.eval()<br>
+&nbsp;&nbsp;for (imgs, labels) in loader:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;with torch.no_grad():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log_probs = model(imgs.to(device))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;loss = criterion(log_probs, labels.to(device))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preds = argmax(log_probs, dim=1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if return_scores:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;probs_pos = exp(log_probs)[:, 1]
         </div>
       </div><br>
 
@@ -523,14 +558,14 @@
       The CAF-NLL loss is implemented as a subclass of <code>nn.Module</code> that takes precomputed class weights and computes per-class focusing exponents inside <code>forward</code>:
 
       <div class="code" style="margin-bottom:12px;">
-        w = class_weights  # (C,)<br>
-        w_bar = w.mean()<br>
-        gamma_c = gamma0 + beta * (w / w_bar - 1.0)  # (C,)<br>
-        pt = probs[range(N), targets]<br>
-        log_pt = log_probs[range(N), targets]<br>
-        w_t = w[targets]<br>
-        gamma_t = gamma_c[targets]<br>
-        loss = - (w_t * (1 - pt)**gamma_t * log_pt)
+w = class_weights  # (C,)<br>
+w_bar = w.mean()<br>
+gamma_c = gamma0 + beta * (w / w_bar - 1.0)  # (C,)<br>
+pt = probs[range(N), targets]<br>
+log_pt = log_probs[range(N), targets]<br>
+w_t = w[targets]<br>
+gamma_t = gamma_c[targets]<br>
+loss = - (w_t * (1 - pt)**gamma_t * log_pt)
       </div>
 
       Because we operate directly on log-probabilities, CAF-NLL can be swapped in without changing the rest of the training code. When beta = 0, the loss reduces to class-weighted NLL with a mild focal factor controlled by gamma0.<br><br>
