@@ -219,16 +219,18 @@
     font-size: 14px;
     line-height: 1.4;
   }
+
+  /* Make LaTeX equations seamless (no boxes) */
   .formula {
     font-family: "Courier New", monospace;
-    background-color: #fdfdff;
-    padding: 10px 14px;
-    border-radius: 6px;
-    border: 1px solid #e1e4f2;
-    display: inline-block;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    margin: 10px 0;
+    display: block;
+    text-align: center;
   }
+
   li {
     margin-bottom: 12px;
   }
@@ -336,19 +338,7 @@
       </div>
     </div>
     <div class="margin-right-block">
-      <b>Figure 1.</b> Single-example comparison of a normal chest X-ray (left) and a pneumonia-positive X-ray (right) from the RSNA dataset. Our model’s task is to assign higher probability to the pneumonia class for cases like the right-hand image, despite the often subtle radiographic differences.
-    </div>
-  </div>
-
-  <!-- HERO IMAGE (MONTAGE) -->
-  <div class="content-margin-container">
-    <div class="margin-left-block">
-    </div>
-    <div class="main-content-block">
-      <img src="./images/rsna_pneumonia_montage.png" width="512px" />
-    </div>
-    <div class="margin-right-block">
-      <b>Figure 2.</b> Example chest X-ray images from the RSNA Pneumonia Detection Challenge dataset. Pneumonia-positive cases (minority class) are visually subtle and under-represented relative to normal studies, making this a natural testbed for class-imbalanced medical image classification.
+      <b>Figure 1.</b> Example chest X-rays: a normal study (left) and a pneumonia-positive study (right) from the RSNA dataset. The goal is to assign higher probability to the pneumonia class when subtle opacities are present.
     </div>
   </div>
 
@@ -398,7 +388,7 @@
       <h1>Prior Work</h1>
 
       <b>Vision Transformers in medical imaging.</b><br>
-      Vision Transformers (ViTs) have quickly become competitive alternatives to convolutional networks for image classification. ViT-B/16 divides an image into non-overlapping patches, linearly embeds each patch, adds positional encodings, and feeds the resulting tokens through a transformer encoder with multi-head self-attention before a classification head produces logits. While most clinical imaging work still relies on CNNs, several recent papers have shown that ViTs pre-trained on large natural image datasets can transfer surprisingly well to radiology tasks such as chest X-ray abnormality detection and mammography.<br><br>
+      Vision Transformers (ViTs) have quickly become competitive alternatives to convolutional networks for image classification. ViT-B/16 divides an image into non-overlapping patches, linearly embeds each patch, adds positional encodings, and feeds the resulting tokens through a transformer encoder with multi-head self-attention before a classification head produces logits. While most clinical imaging work still relies on CNNs, several recent papers have shown that ViTs pre-trained on large natural image datasets can transfer surprisingly well to radiology tasks such as chest X-ray abnormality detection and mammography.<a href="#ref_1">[1]</a><br><br>
 
       <b>Class imbalance and reweighting.</b><br>
       Class imbalance is a well-known issue in both vision and medical ML. The simplest approach is to reweight the loss by inverse class frequency. For a binary label $y \in \{0,1\}$ and predicted probability $p = \sigma(z)$, the weighted NLL loss can be written as:
@@ -407,7 +397,7 @@
           L_{\text{wNLL}} = -\, w_1\, y \,\log(p)\;-\; w_0\, (1 - y)\, \log(1 - p)
         \]
       </div>
-      where $w_c \propto 1 / \text{freq}(c)$. These weights are passed directly into NLLLoss so that minority-class errors are penalized more heavily.<br><br>
+      where $w_c \propto 1 / \text{freq}(c)$. These weights are passed directly into NLLLoss so that minority-class errors are penalized more heavily.<a href="#ref_4">[4]</a><br><br>
 
       <b>Focal Loss.</b><br>
       Focal Loss was introduced for dense object detection as a way to down-weight easy examples and focus training on hard, misclassified examples. For one example with true class $y$ and predicted probability $p_{\text{true}}$ assigned to that class:
@@ -416,16 +406,27 @@
           L_{\text{focal}} = -\, \alpha_y \, (1 - p_{\text{true}})^{\gamma} \, \log\!\bigl(p_{\text{true}}\bigr)
         \]
       </div>
-      When $\gamma = 0$, Focal Loss reduces to weighted cross-entropy. With $\gamma &gt; 0$, easy examples with $p_{\text{true}}$ close to 1 contribute less to the gradient, allowing the optimizer to focus on harder cases.<br><br>
+      When $\gamma = 0$, Focal Loss reduces to weighted cross-entropy. With $\gamma &gt; 0$, easy examples with $p_{\text{true}}$ close to 1 contribute less to the gradient, allowing the optimizer to focus on harder cases.<a href="#ref_2">[2]</a><br><br>
 
       <b>Class-adaptive focal variants.</b><br>
       Several works propose making either $\alpha$ or $\gamma$ class-dependent, so that rare classes receive both higher weight and stronger focusing. Our CAF-style loss follows this spirit: rather than hand-tuning separate hyperparameters for each class, we fix a single focusing parameter and mix it with a class-weighted NLL term, allowing the degree of emphasis on rare classes to be controlled by a single scalar $\lambda$.<br><br>
 
       <b>Medical imaging benchmarks.</b><br>
-      The RSNA Pneumonia Detection Challenge dataset is a widely used chest X-ray benchmark derived from NIH CXR data, with bounding boxes for pneumonia regions and image-level labels derived from radiology reports. Unlike toy datasets where classes are balanced by design, RSNA preserves a more realistic clinical label distribution, making it useful for studying imbalance in a setting that resembles real screening workflows.
+      The RSNA Pneumonia Detection Challenge dataset is a widely used chest X-ray benchmark derived from NIH CXR data, with bounding boxes for pneumonia regions and image-level labels derived from radiology reports. Unlike toy datasets where classes are balanced by design, RSNA preserves a more realistic clinical label distribution, making it useful for studying imbalance in a setting that resembles real screening workflows.<a href="#ref_3">[3]</a>
     </div>
     <div class="margin-right-block">
       Most prior work on class imbalance in medical imaging reports results for one or two tricks (e.g., class weights or focal loss) but rarely compares them in a controlled setting on the same backbone. Our project tries to make that comparison explicit for ViTs.
+    </div>
+  </div>
+
+  <!-- ViT ARCHITECTURE FIGURE -->
+  <div class="content-margin-container">
+    <div class="margin-left-block"></div>
+    <div class="main-content-block">
+      <img src="./images/ViT.png" alt="Vision Transformer architecture diagram" />
+    </div>
+    <div class="margin-right-block">
+      <b>Figure 2.</b> Schematic of the Vision Transformer (ViT-B/16) architecture used in our experiments. We fine-tune all layers and replace the final classification head with a 2-class log-probability head for pneumonia vs. no pneumonia.
     </div>
   </div>
 
@@ -437,7 +438,7 @@
       <h1>Methods &amp; Experiments</h1>
 
       <b>Dataset and splits.</b><br>
-      We use the Kaggle RSNA Pneumonia Detection Challenge dataset via <code>kagglehub</code>. Each DICOM study is associated with one or more bounding boxes and a binary label <code>Target ∈ {0,1}</code> indicating the presence of pneumonia. We convert this to a patient-level binary classification task:
+      We use the Kaggle RSNA Pneumonia Detection Challenge dataset via <code>kagglehub</code>.<a href="#ref_3">[3]</a> Each DICOM study is associated with one or more bounding boxes and a binary label <code>Target ∈ {0,1}</code> indicating the presence of pneumonia. We convert this to a patient-level binary classification task:
       <ul>
         <li>Group rows by <code>patientId</code> and set <code>target = max(Target)</code>.</li>
         <li>Construct a single DICOM path per patient.</li>
@@ -462,7 +463,7 @@
       <b>Model.</b><br>
       We fine-tune a ViT-B/16 model from <code>torchvision</code>:
       <ul>
-        <li>Initialize with <code>ViT_B_16_Weights.IMAGENET1K_V1</code>.</li>
+        <li>Initialize with <code>ViT_B_16_Weights.IMAGENET1K_V1</code>.<a href="#ref_1">[1]</a></li>
         <li>Replace the classification head with a 2-class linear layer followed by <code>LogSoftmax(dim=1)</code>.</li>
         <li>Train all layers; no freezing of encoder parameters.</li>
       </ul>
@@ -491,7 +492,7 @@
               L_{\text{focal}} = -\, \alpha_y \, (1 - p_{\text{true}})^{\gamma} \, \log\!\bigl(p_{\text{true}}\bigr)
             \]
           </div>
-          where $p_{\text{true}}$ is the predicted probability of the true class. We set $\gamma = 2.0$ and $\alpha = [0.25, 0.75]$ for [no-pneumonia, pneumonia] respectively.
+          where $p_{\text{true}}$ is the predicted probability of the true class. We set $\gamma = 2.0$ and $\alpha = [0.25, 0.75]$ for [no-pneumonia, pneumonia] respectively.<a href="#ref_2">[2]</a>
         </li>
 
         <li><b>CAF-style mixed loss: class-weighted NLL + Focal Loss.</b><br>
@@ -540,7 +541,7 @@
     </div>
     <div class="main-content-block">
       <h1>Results</h1>
-      We summarize test performance for each imbalance strategy on the held-out RSNA test set. For each experiment we save a confusion matrix and ROC curve as PNGs and include the key scalar metrics in the text. Below, we highlight the most important trade-offs, then provide per-experiment figures and numbers.<br><br>
+      We summarize test performance for each imbalance strategy on the held-out RSNA test set. For each experiment we save a confusion matrix and ROC curve as PNGs and include the key scalar metrics under the corresponding figure. Below, we highlight the most important trade-offs, then provide per-experiment figures and numbers.<br><br>
 
       <ul>
         <li><b>baseline_ViT</b> achieves reasonable overall accuracy but almost never predicts pneumonia, leading to extremely low minority recall.</li>
@@ -560,10 +561,7 @@
     <div class="margin-left-block"></div>
     <div class="main-content-block">
       <img src="./images/baseline_ViT_cm.png" alt="baseline_ViT confusion matrix" />
-    </div>
-    <div class="margin-right-block">
-      <b>Figure 3.</b> Test confusion matrix for <code>baseline_ViT</code> (no explicit imbalance handling). The model almost never predicts pneumonia, illustrating how a seemingly reasonable accuracy can hide catastrophic minority-class performance.<br><br>
-      <pre style="font-size:12px; white-space:pre;">
+      <pre style="font-size:12px; white-space:pre; margin-top:10px;">
 FINAL TEST RESULTS: baseline_ViT
   Test loss 0.4647 acc 0.7757
 
@@ -582,6 +580,9 @@ no_pneumonia(0)       0.78      1.00      0.87      1551
    weighted avg       0.77      0.78      0.68      2002
       </pre>
     </div>
+    <div class="margin-right-block">
+      <b>Figure 3.</b> Test confusion matrix for <code>baseline_ViT</code> (no explicit imbalance handling). The model almost never predicts pneumonia: minority recall is essentially zero despite a superficially reasonable overall accuracy.
+    </div>
   </div>
 
   <!-- RESULTS: oversample_minority -->
@@ -589,10 +590,7 @@ no_pneumonia(0)       0.78      1.00      0.87      1551
     <div class="margin-left-block"></div>
     <div class="main-content-block">
       <img src="./images/oversample_minority_cm.png" alt="oversample_minority confusion matrix" />
-    </div>
-    <div class="margin-right-block">
-      <b>Figure 4.</b> Test confusion matrix for <code>oversample_minority</code> (WeightedRandomSampler). Pneumonia recall improves substantially, but the model now over-calls pneumonia on many normal studies, shifting errors toward false positives.<br><br>
-      <pre style="font-size:12px; white-space:pre;">
+      <pre style="font-size:12px; white-space:pre; margin-top:10px;">
 FINAL TEST RESULTS: oversample_minority
   Test loss 0.4989 acc 0.7657
 
@@ -611,6 +609,9 @@ no_pneumonia(0)       0.89      0.79      0.84      1551
    weighted avg       0.80      0.77      0.78      2002
       </pre>
     </div>
+    <div class="margin-right-block">
+      <b>Figure 4.</b> Test confusion matrix for <code>oversample_minority</code> (WeightedRandomSampler). Oversampling boosts pneumonia recall dramatically but introduces more false positives among normal studies.
+    </div>
   </div>
 
   <!-- RESULTS: augment_minority -->
@@ -618,10 +619,7 @@ no_pneumonia(0)       0.89      0.79      0.84      1551
     <div class="margin-left-block"></div>
     <div class="main-content-block">
       <img src="./images/augment_minority_cm.png" alt="augment_minority confusion matrix" />
-    </div>
-    <div class="margin-right-block">
-      <b>Figure 5.</b> Test confusion matrix for <code>augment_minority</code> (stronger transforms for pneumonia-only). Augmentation alone is not sufficient; the model still mostly predicts “no pneumonia” and fails to recover minority recall.<br><br>
-      <pre style="font-size:12px; white-space:pre;">
+      <pre style="font-size:12px; white-space:pre; margin-top:10px;">
 FINAL TEST RESULTS: augment_minority
   Test loss 1.6580 acc 0.7732
 
@@ -640,6 +638,9 @@ no_pneumonia(0)       0.77      1.00      0.87      1551
    weighted avg       0.64      0.77      0.68      2002
       </pre>
     </div>
+    <div class="margin-right-block">
+      <b>Figure 5.</b> Test confusion matrix for <code>augment_minority</code> (stronger transforms on pneumonia-only). Augmentation alone does not fix the bias: the model still predicts “no pneumonia” for essentially all positive cases.
+    </div>
   </div>
 
   <!-- RESULTS: class_weighted_NLL -->
@@ -647,10 +648,7 @@ no_pneumonia(0)       0.77      1.00      0.87      1551
     <div class="margin-left-block"></div>
     <div class="main-content-block">
       <img src="./images/class_weighted_NLL_cm.png" alt="class_weighted_NLL confusion matrix" />
-    </div>
-    <div class="margin-right-block">
-      <b>Figure 6.</b> Test confusion matrix for <code>class_weighted_NLL</code>. Class weighting directly encodes that missing pneumonia is worse than a false positive, shifting the decision boundary to catch more positives while retaining good overall accuracy.<br><br>
-      <pre style="font-size:12px; white-space:pre;">
+      <pre style="font-size:12px; white-space:pre; margin-top:10px;">
 FINAL TEST RESULTS: class_weighted_NLL
   Test loss 0.6264 acc 0.7967
 
@@ -665,6 +663,9 @@ no_pneumonia(0)       0.84      0.92      0.87      1551
    weighted avg       0.78      0.80      0.78      2002
       </pre>
     </div>
+    <div class="margin-right-block">
+      <b>Figure 6.</b> Test confusion matrix for <code>class_weighted_NLL</code>. Inverse-frequency class weights meaningfully improve pneumonia recall while preserving high accuracy on the majority class.
+    </div>
   </div>
 
   <!-- RESULTS: focal_loss -->
@@ -672,10 +673,7 @@ no_pneumonia(0)       0.84      0.92      0.87      1551
     <div class="margin-left-block"></div>
     <div class="main-content-block">
       <img src="./images/focal_loss_cm.png" alt="focal_loss confusion matrix" />
-    </div>
-    <div class="margin-right-block">
-      <b>Figure 7.</b> Test confusion matrix for <code>focal_loss</code>. Focal Loss further sharpens minority performance while keeping overall accuracy high, though it introduces additional hyperparameters (α, γ) that require tuning.<br><br>
-      <pre style="font-size:12px; white-space:pre;">
+      <pre style="font-size:12px; white-space:pre; margin-top:10px;">
 FINAL TEST RESULTS: focal_loss
   Test loss 0.0549 acc 0.8127
 
@@ -690,6 +688,9 @@ no_pneumonia(0)       0.84      0.94      0.89      1551
    weighted avg       0.79      0.81      0.80      2002
       </pre>
     </div>
+    <div class="margin-right-block">
+      <b>Figure 7.</b> Test confusion matrix for <code>focal_loss</code>. Focal Loss further sharpens minority performance while keeping overall accuracy high, at the cost of extra hyperparameters.
+    </div>
   </div>
 
   <!-- RESULTS: caf_nll -->
@@ -697,10 +698,7 @@ no_pneumonia(0)       0.84      0.94      0.89      1551
     <div class="margin-left-block"></div>
     <div class="main-content-block">
       <img src="./images/caf_nll_cm.png" alt="caf_nll confusion matrix" />
-    </div>
-    <div class="margin-right-block">
-      <b>Figure 8.</b> Test confusion matrix for <code>caf_nll</code> (mixed weighted NLL + Focal Loss with λ = 0.8). This CAF-style loss provides a strong balance between majority and minority performance and slightly improves pneumonia F1 relative to pure class weighting.<br><br>
-      <pre style="font-size:12px; white-space:pre;">
+      <pre style="font-size:12px; white-space:pre; margin-top:10px;">
 FINAL TEST RESULTS: caf_nll
   Test loss 0.2097 acc 0.8102
 
@@ -719,6 +717,9 @@ no_pneumonia(0)       0.86      0.91      0.88      1551
    weighted avg       0.80      0.81      0.80      2002
       </pre>
     </div>
+    <div class="margin-right-block">
+      <b>Figure 8.</b> Test confusion matrix for <code>caf_nll</code> (mixed weighted NLL + Focal Loss, λ = 0.8). CAF provides a strong compromise, further improving pneumonia F1 while maintaining robust majority-class performance.
+    </div>
   </div>
 
   <!-- RESULTS: custom placeholder -->
@@ -726,10 +727,7 @@ no_pneumonia(0)       0.86      0.91      0.88      1551
     <div class="margin-left-block"></div>
     <div class="main-content-block">
       <img src="./images/custom_method_cm.png" alt="custom method confusion matrix placeholder" />
-    </div>
-    <div class="margin-right-block">
-      <b>Figure 9.</b> Placeholder for a custom method (e.g., duplicate-and-augment oversampling plus CAF loss). Replace <code>custom_method_cm.png</code> with your own confusion matrix and ROC figure, and paste the final test metrics here once the experiment is run.<br><br>
-      <pre style="font-size:12px; white-space:pre;">
+      <pre style="font-size:12px; white-space:pre; margin-top:10px;">
 FINAL TEST RESULTS: custom_method
   Test loss ....  acc ....
 
@@ -740,6 +738,9 @@ Test Confusion Matrix (raw):
 Test Classification Report:
   (paste your sklearn classification_report here)
       </pre>
+    </div>
+    <div class="margin-right-block">
+      <b>Figure 9.</b> Placeholder for a custom method (e.g., oversample-plus-augment combined with CAF). Replace the image and metrics here once your final experiment configuration has been run.
     </div>
   </div>
 
