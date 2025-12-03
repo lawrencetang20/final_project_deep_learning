@@ -71,6 +71,17 @@
     display: block;
     margin: auto;
   }
+  .conf-img {
+      width: 420px;      /* or any width you choose */
+      height: auto;
+  }
+
+  .roc-img {
+      width: 420px;      /* match conf width */
+      height: auto;
+      margin-top: 10px;
+  }
+
   .my-video {
     max-width: 100%;
     height: auto;
@@ -326,12 +337,12 @@
     <div class="main-content-block">
       <div class="xray-row">
         <div class="xray-col">
-          <img class="xray-pair-img" src="./images/no_pneumonia.png"
+          <img class="xray-pair-img" src="./images/NoPneumonia_Ex.png"
                alt="Normal chest X-ray (no pneumonia)" />
           <div style="font-size:14px;">No pneumonia</div>
         </div>
         <div class="xray-col">
-          <img class="xray-pair-img" src="./images/pneumonia.png"
+          <img class="xray-pair-img" src="./images/Pneumonia_Ex.png"
                alt="Pneumonia-positive chest X-ray" />
           <div style="font-size:14px;">Pneumonia</div>
         </div>
@@ -560,7 +571,8 @@
   <div class="content-margin-container">
     <div class="margin-left-block"></div>
     <div class="main-content-block">
-      <img src="./images/baseline_ViT_cm.png" alt="baseline_ViT confusion matrix" />
+      <img src="./images/Baseline_Conf.png" class="conf-img" alt="baseline_ViT confusion matrix" />
+      <img src="./images/Baseline_ROC.png" class="roc-img" alt="baseline_ViT ROC curve" style="margin-top:10px;" />
       <pre style="font-size:12px; white-space:pre; margin-top:10px;">
 FINAL TEST RESULTS: baseline_ViT
   Test loss 0.4647 acc 0.7757
@@ -589,7 +601,8 @@ no_pneumonia(0)       0.78      1.00      0.87      1551
   <div class="content-margin-container">
     <div class="margin-left-block"></div>
     <div class="main-content-block">
-      <img src="./images/oversample_minority_cm.png" alt="oversample_minority confusion matrix" />
+      <img src="./images/Oversample_Conf.png" class="conf-img" alt="oversample_minority confusion matrix" />
+      <img src="./images/Oversample_ROC.png" class="roc-img" alt="oversample_minority ROC curve" style="margin-top:10px;" />
       <pre style="font-size:12px; white-space:pre; margin-top:10px;">
 FINAL TEST RESULTS: oversample_minority
   Test loss 0.4989 acc 0.7657
@@ -618,7 +631,8 @@ no_pneumonia(0)       0.89      0.79      0.84      1551
   <div class="content-margin-container">
     <div class="margin-left-block"></div>
     <div class="main-content-block">
-      <img src="./images/augment_minority_cm.png" alt="augment_minority confusion matrix" />
+      <img src="./images/Augment_Conf.png" class="conf-img" alt="augment_minority confusion matrix" />
+      <img src="./images/Augment_ROC.png" class="roc-img" alt="augment_minority ROC curve" style="margin-top:10px;" />
       <pre style="font-size:12px; white-space:pre; margin-top:10px;">
 FINAL TEST RESULTS: augment_minority
   Test loss 1.6580 acc 0.7732
@@ -647,7 +661,8 @@ no_pneumonia(0)       0.77      1.00      0.87      1551
   <div class="content-margin-container">
     <div class="margin-left-block"></div>
     <div class="main-content-block">
-      <img src="./images/class_weighted_NLL_cm.png" alt="class_weighted_NLL confusion matrix" />
+      <img src="./images/ClassWeighted_Conf.png" class="conf-img" alt="class_weighted_NLL confusion matrix" />
+      <img src="./images/ClassWeighted_ROC.png" class="roc-img" alt="class_weighted_NLL ROC curve" style="margin-top:10px;" />
       <pre style="font-size:12px; white-space:pre; margin-top:10px;">
 FINAL TEST RESULTS: class_weighted_NLL
   Test loss 0.6264 acc 0.7967
@@ -672,7 +687,8 @@ no_pneumonia(0)       0.84      0.92      0.87      1551
   <div class="content-margin-container">
     <div class="margin-left-block"></div>
     <div class="main-content-block">
-      <img src="./images/focal_loss_cm.png" alt="focal_loss confusion matrix" />
+      <img src="./images/Focal_Conf.png" class="conf-img" alt="focal_loss confusion matrix" />
+      <img src="./images/Focal_ROC.png" class="roc-img" alt="focal_loss ROC curve" style="margin-top:10px;" />
       <pre style="font-size:12px; white-space:pre; margin-top:10px;">
 FINAL TEST RESULTS: focal_loss
   Test loss 0.0549 acc 0.8127
@@ -697,7 +713,8 @@ no_pneumonia(0)       0.84      0.94      0.89      1551
   <div class="content-margin-container">
     <div class="margin-left-block"></div>
     <div class="main-content-block">
-      <img src="./images/caf_nll_cm.png" alt="caf_nll confusion matrix" />
+      <img src="./images/CAF_Conf.png" class="conf-img" alt="caf_nll confusion matrix" />
+      <img src="./images/Caf_ROC.png" class="roc-img" alt="caf_nll ROC curve" style="margin-top:10px;" />
       <pre style="font-size:12px; white-space:pre; margin-top:10px;">
 FINAL TEST RESULTS: caf_nll
   Test loss 0.2097 acc 0.8102
