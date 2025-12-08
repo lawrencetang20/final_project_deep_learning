@@ -407,11 +407,18 @@ margin-bottom: 6px;
       <p>
         Deep learning systems that are deployed in medicine often face the worst possible combination of conditions, including noisy labels, strong distribution shifts, and severe class imbalance. The fraction of studies of confirmed pneumonia is far smaller than the number of benign scans in chest X-ray screening. However, the primary goal from a clinical perspective is to correctly identify these minority cases where the illness is existent.
       </p>
+      <p>
+        From a deep learning perspective, this raises a concrete question: when we deploy high-capacity architectures such as Vision Transformers in this setting, is their failure to detect rare disease cases primarily due to the backbone, or to how we train them under imbalance? Our working hypothesis is that, for a fixed ViT architecture, <i>the choice of loss and sampling strategy alone</i> can move a model from “looking good on paper” (high accuracy, nearly zero sensitivity) to a clinically useful operating point that trades a small increase in false positives for a large gain in pneumonia recall.
+      </p>
 
-      In this project we ask the following question:
+      Thus, in this project we ask the following question:
       <div class="hypothesis" style="margin-top:16px; margin-bottom:16px;">
         <b>Research question.</b>  For a fixed Vision Transformer (ViT) architecture on a real, imbalanced medical imaging dataset, how do different loss functions and sampling strategies trade off overall accuracy compared to minority-class performance?
       </div>
+
+      <p>
+        The rest of this blog first reviews prior work on ViTs and imbalance handling, then details our experimental setup, compares six imbalance strategies on a shared ViT backbone, and closes with a discussion of clinical implications and limitations.
+      </p>
 
       <p>
         By treating pneumonia versus no-pneumonia as a binary classification problem, we fine-tune an ImageNet-pretrained ViT-B/16 on the RSNA Pneumonia Detection Challenge chest X-ray dataset. From a basic analysis, we confirm that the dataset is moderately imbalanced: roughly 75% of the data is labelled as “no pneumonia,” with the remaining minority being pneumonia-positive images. We keep the architecture and data splits fixed and vary only how we handle class imbalance during training. We considered the following strategies throughout the project: 
@@ -425,8 +432,25 @@ margin-bottom: 6px;
         <li>CAF-style mixed loss that blends class-weighted NLL with Focal Loss.</li>
       </ul>
       <p>
-        By running all methods in a shared codebase on the same dataset, we aim to understand whether more complicated losses like Focal Loss and CAF-style mixes actually help compared to simpler tricks like oversampling or data augmentation. We wanted to isolate how loss and data rebalancing in an imbalanced setting can alter ViT behavior, meaning our goal was not to beat state-of-the-art (SOTA) models. We wanted to focus on metrics that are particularly relevant for screening such as accuracy, ROC-AUC, and sensitivity (minority-class recall).
+        By running all methods in a shared codebase on the same dataset, we aim to understand whether more complicated losses like Focal Loss and CAF-style mixes actually help compared to simpler tricks like oversampling or data augmentation. We wanted to isolate how loss and data rebalancing in an imbalanced setting can alter ViT behavior. We wanted to focus on metrics that are particularly relevant for screening such as accuracy, ROC-AUC, and sensitivity (minority-class recall).
       </p>
+      <p>
+        Our study is not about beating state-of-the-art on RSNA, but about treating loss shaping and sampling as a “knob” on top of a fixed ViT backbone and asking what actually changes in a clinically meaningful way. Concretely, our contributions are:
+      </p>
+      <ol>
+        <li>
+          <b>A controlled comparison of imbalance strategies on a ViT backbone.</b>
+          We hold the architecture, optimizer, and data splits fixed and systematically vary only loss-level and data-level imbalance handling. This isolates how each strategy reshapes the confusion matrix and ROC curve, rather than conflating improvements with architectural changes.
+        </li>
+        <li>
+          <b>A CAF-style mixed loss tailored to medical class imbalance.</b>
+          We adapt class-adaptive focal ideas to a simple, ViT-compatible mixed objective that linearly combines class-weighted NLL and Focal Loss via a single mixing parameter λ, and we empirically show how this changes minority sensitivity and F1 relative to simpler baselines.
+        </li>
+        <li>
+          <b>Clinically oriented analysis of “good” performance.</b>
+          We show that superficially high accuracy can correspond to almost zero pneumonia recall, and we argue—through confusion matrices and per-class metrics—that rebalancing and focal-style objectives are better aligned with screening needs than raw accuracy or ROC-AUC alone.
+        </li>
+      </ol>
     </div>
     <div class="margin-right-block">
       The original project motivation was melanoma detection on under-represented skin types, but for compute and data-access reasons we prototype on the RSNA pneumonia dataset. The mechanics of imbalance and minority-class errors are similar, and the code and experimental setup can be reused for melanoma in future work.
@@ -604,9 +628,9 @@ margin-bottom: 6px;
       </ol>
       <br>
 
-      <b>Experiments.</b><br>
+      <b>Experimental design and baselines.</b><br>
       <p>
-        All experiments share the same seed, data splits, model architecture, optimizer, and 15 training epochs. The configurations we run are:
+        We deliberately keep the experimental design minimalistic in order to stress-test loss shaping and sampling rather than architecture search. All methods share the same ViT-B/16 backbone, preprocessing pipeline, optimizer (Adam, learning rate 3e-4), batch size, number of epochs, and train/val/test splits. The <code>baseline_ViT</code> configuration acts as a “do nothing” reference for how a standard ViT behaves under raw class imbalance. Each subsequent configuration changes exactly one dimension at a time—either data-level sampling (<code>oversample_minority</code>, <code>augment_minority</code>) or loss-level weighting (<code>class_weighted_NLL</code>, <code>focal_loss</code>, <code>caf_nll</code>)—so that relative differences can be attributed to that intervention rather than confounded by unrelated hyperparameter changes. All experiments share the same seed, data splits, model architecture, optimizer, and 15 training epochs. The configurations we run are:
       </p>
 
       <ol>
@@ -634,6 +658,15 @@ margin-bottom: 6px;
     </div>
     <div class="main-content-block">
       <h1>Results</h1>
+
+      <p>
+        At a high level, our experiments support three qualitative patterns:
+      </p>
+      <ul>
+        <li><b>Uncorrected ViT collapses to the majority class.</b> The baseline model achieves decent accuracy but almost never predicts pneumonia, illustrating how misleading aggregate metrics can be under imbalance.</li>
+        <li><b>Simple rebalancing already changes the regime.</b> Oversampling and class-weighted NLL shift the model into a regime where pneumonia recall is non-trivial, at the cost of more false positives.</li>
+        <li><b>CAF-style mixing refines this trade-off.</b> Focal Loss and the CAF mixed loss further improve minority F1 while keeping accuracy high, suggesting that modestly more complex objectives can yield better screening behavior without altering the backbone.</li>
+      </ul>
 
       <p>
         We summarize performance for each imbalance strategy on the held-out test set. For each experiment we save a confusion matrix and the ROC curve and report key metrics.
@@ -1014,10 +1047,15 @@ evaluate(model, loader, criterion, return_scores):<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;probs_pos = exp(log_probs)[:, 1]
         </div>
       </div><br>
+      <b>Reproducibility.</b><br>
+      <p>
+        For reproducibility, we fix random seeds for PyTorch, NumPy, and Python’s <code>random</code> module, and we log all configuration choices (loss type, sampler type, augmentation flags) as named experiment tags. Each configuration is trained once with this fixed seed; although this does not capture training-seed variance, it ensures that differences between rows in Table&nbsp;1 reflect only the configured imbalance strategy rather than accidental changes in data ordering or initialization.
+      </p>
+
 
     </div>
     <div class="margin-right-block">
-      The full source code, including the CAF-style mixed loss implementation and experiment scripts, is package i the <code>code</code> folder.
+      The full source code, including the CAF-style mixed loss implementation and experiment scripts, is packaged in the <code>code</code> folder.
     </div>
   </div>
 
@@ -1064,15 +1102,37 @@ evaluate(model, loader, criterion, return_scores):<br>
       <p>
         Overall, ROC-AUC values remain in a relatively narrow band (around the low-to-mid 0.8s) across all experiments even when the confusion matrices look very different. This highlights a key lesson: for highly imbalanced clinical tasks, the ROC-AUC statistic alone can really obscure key differences in model behavior at the operating points a clinician might actually use. For example, baseline_ViT and class_weighted_NLL can have similar AUCs, but one completely fails to detect pneumonia while the other achieves non-trivial recall. Our results show the need to report per-class metrics and confusion matrices in addition to summary statistics like ROC-AUC.
       </p>
+      <b>Loss Functions Implicitly Choose an Operating Point</b><br>
+      <p>
+        A key lesson from our experiments is that, with a fixed ViT backbone, the choice of training objective acts as an implicit decision about <i>where</i> on the ROC curve the model will operate. Under plain NLL on an imbalanced dataset, empirical risk minimization is effectively cost-insensitive: the model is rewarded for optimizing overall accuracy, which is dominated by the majority “no pneumonia” class. In this regime, the ViT converges to a degenerate operating point that almost never predicts pneumonia, achieving high accuracy but essentially zero sensitivity to the minority class.
+      </p>
+
+      <p>
+        Once we introduce class-weighted NLL, oversampling, or focal-style objectives, we do not change the architecture, optimization algorithm, or data splits; we only change how the loss function scores mistakes. The confusion matrices in Figures 3–8 and the summary in Table&nbsp;1 show that these objectives move the ViT to a very different part of the ROC curve: pneumonia recall jumps from almost zero to 30–70% depending on the strategy, with only modest changes in overall accuracy and macro metrics. In other words, reweighting and focal-style losses behave like built-in, differentiable versions of threshold tuning for a cost-sensitive classifier.
+      </p>
+
+      <p>
+        Conceptually, this suggests that for high-capacity models such as ViTs, imbalance handling is less about “fixing a weak backbone” and more about encoding an explicit preference over false negatives versus false positives into the training objective. The same architecture can look either useless or clinically plausible depending purely on whether the loss function is cost-insensitive (plain NLL) or cost-aware (class weighting, oversampling, CAF). This supports a broader view of deep learning under class imbalance: the loss function is not just a numeric objective, but an implicit choice of operating point and error costs.
+      </p>
 
       <b>Methodological limitations:</b><br>
       <p>
         However, there are several limitations to our study. First, we work with a fixed ViT-B/16 backbone and a single set of preprocessing transforms in order to keep these uniform across all different loss functions and sampling techniques. There could be different architectures or stronger augmentations might change the relative ranking of imbalance strategies. Second, we run each experiment once with a fixed seed. A more thorough study could average over multiple runs and seeds to separate systematic effects from stochastic variation. We could not do this simply due to compute and time constraints. Third, we focus only on pneumonia versus no-pneumonia. In real chest X-ray workflows, models are often multi-label and must handle many findings simultaneously, which should create richer patterns of imbalance. We focused only on pneumonia simply, again, due to computer power as training a model with many different labels would take more time. Finally, we evaluate primarily on accuracy, recall, precision, F1, and ROC-AUC. There are calibration metrics such as Expected Calibration Error or Brier score that would give a bigger picture of how these loss functions affect probability estimates.
       </p>
 
+      <b>Practical implications for practitioners.</b><br>
+      <p>
+        For practitioners deploying ViTs (or similar backbones) on imbalanced medical tasks, our results suggest a simple checklist: first, never rely on accuracy alone; always inspect per-class recall and confusion matrices. Second, start with class-weighted NLL or oversampling as low-complexity baselines that already fix a large fraction of the failure mode we observe in <code>baseline_ViT</code>. Third, if minority sensitivity remains unsatisfactory and computational budget allows, consider focal-style or CAF-style objectives to fine-tune the trade-off between missed cases and false alarms. Even in this modest student project setting, following that progression changes the model from “almost never flags pneumonia” to “misses about half as many positive cases,” which is a qualitatively different clinical behavior.
+      </p>
+
       <p>
         Despite these caveats, the overall picture is consistent; we showed that simple reweighting and oversampling methods can offer large gains over the uncorrected baseline model, and focal-style objectives provide an additional improvement in the minority regime. Our CAF-style mixed loss appears to be a useful compromise for practitioners who want principled handling of class imbalance without an overly complicated loss design.
       </p>
+      <b>Scope of claims.</b><br>
+      <p>
+        Taken together, we interpret our results as evidence about <i>relative</i> behavior of imbalance strategies on this specific ViT-B/16 + RSNA setup, not as a universal ranking of methods across all architectures or datasets. For example, it is possible that CNN-based backbones or multi-label chest X-ray tasks would reshuffle which method is “best.” Our main claim is therefore conceptual: that reweighting, sampling, and focal-style objectives can radically change minority sensitivity even when ROC-AUC and overall accuracy move only modestly, and that CAF-style mixing offers a simple, tunable compromise in this particular regime.
+      </p>
+
     </div>
     <div class="margin-right-block" style="transform: translate(0%, -100%);">
       This section details all the methods used in the project. We detail quantitatively and qualitatively how each method performed.

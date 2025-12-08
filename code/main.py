@@ -40,18 +40,18 @@ import pydicom
 # --------------------------------------------
 
 SEED = 42
-VAL_SIZE = 0.25                 # 25% of full data for validation
-TEST_FRACTION_FROM_TRAIN = 0.10 # 10% of remaining train -> held-out test
+VAL_SIZE = 0.25
+TEST_FRACTION_FROM_TRAIN = 0.10
 IMG_SIZE = 224
 BATCH_SIZE = 32
 LR = 3e-4
-NUM_EPOCHS = 15          # main training epochs for each experiment
-NUM_EPOCHS_TUNE = 1      # (optional) λ tuning epochs for CAF; here we keep λ fixed
+NUM_EPOCHS = 15
+NUM_EPOCHS_TUNE = 1 # lambda tuning epochs for CAF
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # For CAF mix loss (weighted NLL + focal)
 CAF_LAMBDA_DEFAULT = 0.8
-FOCAL_ALPHA = [0.25, 0.75]   # [no-pneumonia, pneumonia]
+FOCAL_ALPHA = [0.25, 0.75] # [no-pneumonia, pneumonia]
 FOCAL_GAMMA = 2.0
 
 # Where to save figures for the HTML blog
@@ -142,11 +142,11 @@ def make_splits(df_full):
 
 def compute_class_weights(train_df):
     """
-    Inverse-frequency class weights, rescaled so that mean weight ~ 1.
+    Inverse-frequency class weights, rescaled so that mean weight is around 1.
 
     Returns:
         class_weights_np: np.ndarray of shape [num_classes]
-        oversample_factor: int, ~1 / positive_fraction (for duplicate+augment)
+        oversample_factor: int, around 1 / positive_fraction (for duplicate+augment)
     """
     train_class_counts = train_df["target"].value_counts().sort_index()
     print("\nTrain class counts (for weighting):")
@@ -407,7 +407,7 @@ class MixedCAFWeightedLoss(nn.Module):
     """
     CAF-style mixed loss used in the 'caf_nll' experiment:
 
-        L_mix = (1 - λ) * L_weighted_NLL  +  λ * L_focal
+        L_mix = (1 - lambda) * L_weighted_NLL  +  lambda * L_focal
 
     where:
         - L_weighted_NLL = NLLLoss(weight=class_weights_tensor)
