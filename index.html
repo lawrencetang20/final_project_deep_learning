@@ -505,6 +505,14 @@ margin-bottom: 6px;
       <p>
         The RSNA Pneumonia Detection Challenge dataset is an X-ray benchmark with image-level labels derived from radiology reports. Unlike toy datasets where classes are balanced by design, RSNA has a more realistic clinical label distribution, making it useful for studying imbalance in a setting that resembles real screening workflows. Most prior work on class imbalance in medical imaging reports results for one or two tricks, like class weights or Focal Loss, but rarely compares them in a controlled setting. Our project makes that comparison explicit for ViTs.<a href="#ref_3">[3]</a>
       </p>
+
+      <p>
+        Several prior works motivate our focus on loss functions and class imbalance. Shahi et al. introduced Focal Loss in the context of dense object detection as a modification of cross-entropy where well-classified examples are downweighted so that the model focuses on hard ones.<a href="#ref_5">[5]</a> This work assumes that the main failure mode comes from overwhelming numbers of easy negatives and shows strong gains on COCO-style detection benchmarks, but it is developed for relatively large-scale, natural-image datasets rather than noisy, label-imbalanced medical data. This project combines focal-style focusing with class-weighted NLL in a single CAF-style objective, and evaluates it alongside simpler baselines (plain weighting, oversampling, minority-only augmentation) under a fixed ViT-B/16 backbone. This lets us ask, in a controlled setting, whether the extra complexity of focal-style losses is actually justified for a real, moderately imbalanced clinical dataset, and how much incremental benefit CAF-style mixing offers over simpler reweighting.
+      </p>
+
+      <p>
+        In medical imaging, various prior works have explored imbalance losses, but typically, they used CNN-based architectures and didn’t use controlled comparisons. For example, Bolhassani studies COVID-19 vs. non-COVID chest X-ray classification on the imbalanced CoronaHack dataset using a ResNet50 backbone. They compare standard cross-entropy versus Focal Loss, reporting that Focal can improve performance on the minority class. <a href="#ref_6">[6]</a> However, that work does not examine class-weighted baselines, hybrid losses, or even data-level rebalancing, which can make it hard to tell whether focal is actually better than simpler tricks like inverse-frequency reweighting or oversampling. More recently, Bassi and Attux’s LungX framework uses a hybrid EfficientNet–Vision Transformer architecture for pneumonia detection and shows that ViT-style models transfer well to chest X-ray tasks. However, their focus is on architectural design and multi-task performance rather than on systematically dissecting class imbalance. <a href="#ref_7">[7]</a> This project extends upon these lines of work by holding the ViT architecture, data splits, and training pipeline fixed on the RSNA pneumonia task and varying only loss and sampling strategies. In doing so, we extend prior CNN-based imbalance studies to a ViT backbone, directly compare focal, class-weighted, and hybrid CAF losses against oversampling and minority-focused augmentation, and emphasize minority-class recall and confusion matrices rather than only global AUC—addressing a gap in how imbalance methods are evaluated for transformer-based medical image classifiers.
+      </p>
     </div>
     <div class="margin-right-block">
       Most prior work on class imbalance in medical imaging reports results for one or two tricks (e.g., class weights or focal loss) but rarely compares them in a controlled setting on the same backbone. Our project tries to make that comparison explicit for ViTs.
@@ -1202,15 +1210,35 @@ evaluate(model, loader, criterion, return_scores):<br>
     <div class="main-content-block">
       <div class="citation" id="references" style="height:auto"><br>
         <span style="font-size:16px">References:</span><br><br>
-        <a id="ref_1"></a>[1] Dosovitskiy et al., <a href="https://arxiv.org/abs/2010.11929">An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale</a>, 2020.<br><br>
-        <a id="ref_2"></a>[2] Lin et al., <a href="https://arxiv.org/abs/1708.02002">Focal Loss for Dense Object Detection</a>, 2017.<br><br>
-        <a id="ref_3"></a>[3] Kaggle RSNA Pneumonia Detection Challenge, <a href="https://www.kaggle.com/c/rsna-pneumonia-detection-challenge">competition page</a>.<br><br>
+
+        <a id="ref_1"></a>[1] Dosovitskiy et al., 
+        <a href="https://arxiv.org/abs/2010.11929">An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale</a>, 2020.<br><br>
+
+        <a id="ref_2"></a>[2] Lin et al., 
+        <a href="https://arxiv.org/abs/1708.02002">Focal Loss for Dense Object Detection</a>, 2017.<br><br>
+
+        <a id="ref_3"></a>[3] Kaggle RSNA Pneumonia Detection Challenge, 
+        <a href="https://www.kaggle.com/c/rsna-pneumonia-detection-challenge">competition page</a>.<br><br>
+
         <a id="ref_4"></a>[4] Selected papers and blog posts on class imbalance and reweighting in medical imaging, including work on rebalancing chest X-ray datasets for pneumonia and TB screening.<br><br>
+
+        <a id="ref_5"></a>[5] Shahi et al., 
+        <a href="https://arxiv.org/html/2511.00456v1">Class-Balanced Loss Based on Effective Number of Samples</a>.<br><br>
+
+        <a id="ref_6"></a>[6] Bolhassani et al., 
+        <a href="https://arxiv.org/abs/2105.08382">Investigation of Focal Loss for COVID-19 Chest X-Ray Classification</a>.<br><br>
+
+        <a id="ref_7"></a>[7] Bassi & Attux, 
+        <a href="https://www.researchgate.net/publication/397934427_LungX_A_Hybrid_EfficientNet-Vision_Transformer_Architecture_with_Multi-Scale_Attention_for_Accurate_Pneumonia_Detection">
+          LungX: A Hybrid EfficientNet–Vision Transformer Architecture for Accurate Pneumonia Detection
+        </a>.<br><br>
+
       </div>
     </div>
     <div class="margin-right-block">
     </div>
   </div>
+
 
 </body>
 
