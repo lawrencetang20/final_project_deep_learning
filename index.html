@@ -548,12 +548,6 @@ margin-bottom: 6px;
       </p>
       <br>
 
-      <b>Transforms and DICOM handling.</b><br>
-      <p>
-        For preprocessing and transforms, each DICOM file is read with pydicom, normalized to the range [0, 255], and converted to a 3-channel PIL image so that we can reuse ImageNet normalization and ViT preprocessing. We define a base train transform that resizes to 224×224, applies random horizontal flip, converts to a tensor, and applies ImageNet mean/variance normalization. We define a minority train transform that starts from the base transform and adds random vertical flip, random rotation, and ColorJitter for brightness, contrast, saturation, and hue. For evaluation, we use an eval transform that resizes to 224×224, converts to a tensor, and normalizes, but does not use stochastic augmentation. The custom RsnaPneumoniaDataset chooses between the base and minority transform dynamically depending on the label and whether “augment minority” is enabled in a particular experiment.
-      </p>
-      <br>
-
       <b>Model.</b><br>
       <p>
         For the model, we fine-tune a ViT-B/16 model from torchvision. We initialize with ImageNet-1K pretrained weights <a href="#ref_1">[1]</a>, replace the classification head with a 2-class linear layer followed by a LogSoftmax over the two classes (pneumonia and no pneumonia), and we train all layers without freezing the encoder parameters.
@@ -942,15 +936,6 @@ no_pneumonia(0)       0.86      0.91      0.88      1551
       </thead>
       <tbody>
         <tr>
-          <td>Test loss (↓)</td>
-          <td>0.4647</td>
-          <td>0.4989</td>
-          <td>1.6580</td>
-          <td>0.6264</td>
-          <td><b>0.0549</b></td>
-          <td>0.2097</td>
-        </tr>
-        <tr>
           <td>Accuracy</td>
           <td>0.7757</td>
           <td>0.7657</td>
@@ -1042,11 +1027,11 @@ no_pneumonia(0)       0.86      0.91      0.88      1551
     <div class="main-content-block">
       <h1>Technical Implementation Details</h1>
       <p>
-        All experiments are implemented in a single Python notebook structured into three blocks. The first block contains data download, splits, and transforms. The second block has our model and loss definitions. Finally, the third block contains the training and all of the experiments.
+        All experiments are implemented in a single Python file structured into three blocks. The first block contains data download, splits, and transforms. The second block has our model and loss definitions. Finally, the third block contains the training and all of the experiments. You can view the code file for more details.
       </p>
 
       <b>Training loop and evaluation.</b><br>
-      We use Adam with a learning rate of 3e-4 for optimization, using a batch size of 32 and 15 epochs per experiment. For each experiment, we track validation accuracy over epochs and save the model checkpoint with the best validation accuracy. After training, we reload that checkpoint and compute test-set metrics, including a confusion matrix, classification report, and an ROC curve using scikit-learn. Our core training and evaluation functions are shown below:
+        Our core training and evaluation functions are shown below:
       <div class="algorithm-container">
         <div class="algorithm-title">Algorithm 1: Training and Evaluation Loop</div>
         <div class="code">
@@ -1090,10 +1075,6 @@ evaluate(model, loader, criterion, return_scores):<br>
     <div class="main-content-block">
       <h1>Discussion</h1>
 
-      <p>
-        We wanted to focus on how each strategy could alter both the confusion matrix and ROC curve by looking at the balance between overall accuracy and minority-class performance. This is due to the fact that setting false negatives for pneumonia are much more costly than false positives in a screening.
-      </p>
-
       <b>Baseline vs. naive rebalancing:</b><br>
       <p>
         We see that the baseline ViT with plain NLL achieves a seemingly high test accuracy of about 0.78. However this number is misleading because the confusion matrix reveals that the model almost never predicts pneumonia, predicting only three true positives out of 451 pneumonia cases. We can clearly see that the model has not been learning anything useful; it has actually learned that always predicting “no pneumonia” is an easy local optimum under class imbalance. Thus, this shows a common failure in medical machine learning where high accuracy is driven entirely by the majority class and is misleading.
@@ -1105,7 +1086,7 @@ evaluate(model, loader, criterion, return_scores):<br>
 
       <b>Augmenting the minority class in isolation:</b><br>
       <p>
-        If we have stronger augmentation only for pneumonia-positive images (while minimally changing the sampling distribution), this should offer a more modest intervention and the model should see a more diverse view of each positive. However, in our experiments this does not solve the fundamental bias toward the majority class: the model still predicts no pneumonia for almost all pneumonia cases, with zero true positives on the test set. This shows that in this medical setting increasing exposure frequency of the minority class is more critical than diversity alone. Overall, augmentation is valuable, but it appears to work best when combined with a rebalancing of how often the minority class is sampled or how heavily its errors are weighted.
+        In our experiments augmenting does not solve the fundamental bias toward the majority class: the model still predicts no pneumonia for almost all pneumonia cases, with zero true positives on the test set. This shows that in this medical setting increasing exposure frequency of the minority class is more critical than diversity alone.
       </p>
 
       <b>Class-weighted NLL and Focal Loss:</b><br>
@@ -1114,7 +1095,7 @@ evaluate(model, loader, criterion, return_scores):<br>
       </p>
 
       <p>
-        For Focal Loss, we add a second layer of bias and focus training on hard examples by down-weighting easy, correctly classified cases. In the focal_loss experiment, we see that pneumonia recall is around the high 30s or 40 percent range, but there is also slightly improved overall accuracy (around 0.81) and a better balance between sensitivity and specificity. Qualitatively, Focal Loss shows that it can help the model pay attention to the borderline cases near the decision boundary and not overfitting to a few extremely easy positives. However, this comes at the cost of extra hyperparameters (alpha and gamma) that can be non-trivial to tune and may interact with dataset noise and label quality.
+        For Focal Loss, we add a second layer of bias and focus training on hard examples by down-weighting easy, correctly classified cases. In the focal_loss experiment, we see that pneumonia recall is around the high 30s or 40 percent range, but there is also slightly improved overall accuracy (around 0.81) and a better balance between sensitivity and specificity. Qualitatively, Focal Loss shows that it can help the model pay attention to the borderline cases near the decision boundary and not overfitting to a few extremely easy positives, but at the cost of extra hyperparameters (alpha and gamma) that can be non-trivial to tune and may interact with dataset noise and label quality.
       </p>
 
       <b>CAF-style mixed loss:</b><br>
@@ -1185,10 +1166,6 @@ evaluate(model, loader, criterion, return_scores):<br>
         <li><b>CAF-style mixing is a practical compromise:</b><br>
           Our CAF-style loss offers a simple way to combine focal focusing and class imbalance. Through mixing a class-weighted NLL loss term with a focal loss term using a single lambda hyperparameter, we obtain a “balanced focal” objective whose strength is controlled by one parameter. In our experiments, a lambda value of 0.8, which may be a good default for imbalance tasks, results in strong performance across metrics.</li>
       </ol>
-
-      <p>
-        More broadly, this project shows that we should evaluate models not only by overall ROC-AUC but also by minority-class sensitivity for clinical screening tasks. Also, the project shows how confusion matrices can change under different imbalance strategies which have different levels of robustness to realistic class prevalence shifts across training and deployment.
-      </p>
 
       <p>
         Our recommendation in a practical standpoint is to start with class-weighted NLL and minority-focused augmentation which solve a large portion of the imbalance problems with relatively low complexity. After adding the above, we recommend layering in focal or CAF-style losses if the application demands sensitivity on rare, high-risk findings and if you can afford compute power for additional hyperparameter tuning. Lastly, we note the importance to inspect not just ROC-AUC but also confusion matrices and per-class metrics before deploying a model in a clinical workflow.
