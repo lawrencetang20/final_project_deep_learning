@@ -267,50 +267,82 @@
     margin: 0 auto 6px auto;
   }
   .results-header {
-  margin-top: 0;
-  font-size: 20px;
-  font-weight: 700;
-  color: #2a2a2a;
-}
+    margin-top: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #2a2a2a;
+  }
 
-.results-divider {
-  margin: 6px 0 12px 0;
-  border: none;
-  border-top: 1px solid #bbb;
-}
+  .results-divider {
+    margin: 6px 0 12px 0;
+    border: none;
+    border-top: 1px solid #bbb;
+  }
 
-.results-pre {
-  font-size: 12px;
-  background: #fafafa;
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 6px;
-  margin-top: 10px;
-  white-space: pre;
-}
-.results-table {
-width: 100%;
-border-collapse: collapse;
-font-size: 13px;
-margin-top: 16px;
-}
-.results-table th,
-.results-table td {
-border: 1px solid #ddd;
-padding: 6px 8px;
-text-align: center;
-}
-.results-table th {
-background-color: #f2f4ff;
-font-weight: 600;
-}
-.results-table caption {
-caption-side: top;
-text-align: left;
-font-weight: 600;
-margin-bottom: 6px;
-}
+  .results-pre {
+    font-size: 12px;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+    white-space: pre;
+  }
+  .results-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 16px;
+  }
+  .results-table th,
+  .results-table td {
+    border: 1px solid #ddd;
+    padding: 6px 8px;
+    text-align: center;
+  }
+  .results-table th {
+    background-color: #f2f4ff;
+    font-weight: 600;
+  }
+  .results-table caption {
+    caption-side: top;
+    text-align: left;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
 
+  /* Slideshow for Figures 3–8 */
+  .slide {
+    display: none;
+  }
+  .slide.active {
+    display: block;
+  }
+  .slide-caption {
+    display: none;
+  }
+  .slide-caption.active {
+    display: block;
+  }
+  .slideshow-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 12px;
+    font-size: 14px;
+  }
+  .slideshow-controls button {
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .slideshow-controls button:hover {
+    background: #e8e8e8;
+  }
 
 </style>
 
@@ -695,19 +727,27 @@ margin-bottom: 6px;
     </div>
   </div>
 
-<!-- RESULTS: baseline_ViT -->
-<div class="content-margin-container">
-  <div class="margin-left-block"></div>
+  <!-- RESULTS SLIDESHOW FOR FIGURES 3–8 -->
+  <div class="content-margin-container">
+    <div class="margin-left-block"></div>
 
-  <div class="main-content-block">
+    <div class="main-content-block">
+      <div id="results-slideshow">
+        <div class="slideshow-controls">
+          <button type="button" onclick="prevSlide()">&larr; Previous</button>
+          <span id="slide-indicator">1 / 6</span>
+          <button type="button" onclick="nextSlide()">Next &rarr;</button>
+        </div>
 
-      <h2 class="results-header">Baseline Model: <code>baseline_ViT</code></h2>
-      <hr class="results-divider">
+        <!-- Slide 1: baseline_ViT -->
+        <div class="slide active" data-caption-id="caption-1">
+          <h2 class="results-header">Baseline Model: <code>baseline_ViT</code></h2>
+          <hr class="results-divider">
 
-      <img src="./images/Baseline_Conf.png" class="conf-img" alt="baseline_ViT confusion matrix" />
-      <img src="./images/Baseline_ROC.png" class="roc-img" alt="baseline_ViT ROC curve" style="margin-top:10px;" />
+          <img src="./images/Baseline_Conf.png" class="conf-img" alt="baseline_ViT confusion matrix" />
+          <img src="./images/Baseline_ROC.png" class="roc-img" alt="baseline_ViT ROC curve" style="margin-top:10px;" />
 
-      <pre class="results-pre">
+          <pre class="results-pre">
 FINAL TEST RESULTS: baseline_ViT
   Test loss 0.4647 acc 0.7757
 
@@ -724,27 +764,18 @@ no_pneumonia(0)       0.78      1.00      0.87      1551
        accuracy                           0.78      2002
       macro avg       0.76      0.50      0.44      2002
    weighted avg       0.77      0.78      0.68      2002
-      </pre>
-  </div>
+          </pre>
+        </div>
 
-  <div class="margin-right-block">
-    <b>Figure 3.</b> Test confusion matrix for <code>baseline_ViT</code> (no explicit imbalance handling). The model almost never predicts pneumonia: minority recall is essentially zero despite a superficially reasonable overall accuracy.
-  </div>
-</div>
+        <!-- Slide 2: oversample_minority -->
+        <div class="slide" data-caption-id="caption-2">
+          <h2 class="results-header">Oversampling Strategy: <code>oversample_minority</code></h2>
+          <hr class="results-divider">
 
-<!-- RESULTS: oversample_minority -->
-<div class="content-margin-container">
-  <div class="margin-left-block"></div>
+          <img src="./images/Oversample_Conf.png" class="conf-img" alt="oversample_minority confusion matrix" />
+          <img src="./images/Oversample_ROC.png" class="roc-img" alt="oversample_minority ROC curve" style="margin-top:10px;" />
 
-  <div class="main-content-block">
-
-      <h2 class="results-header">Oversampling Strategy: <code>oversample_minority</code></h2>
-      <hr class="results-divider">
-
-      <img src="./images/Oversample_Conf.png" class="conf-img" alt="oversample_minority confusion matrix" />
-      <img src="./images/Oversample_ROC.png" class="roc-img" alt="oversample_minority ROC curve" style="margin-top:10px;" />
-
-      <pre class="results-pre">
+          <pre class="results-pre">
 FINAL TEST RESULTS: oversample_minority
   Test loss 0.4989 acc 0.7657
 
@@ -761,27 +792,18 @@ no_pneumonia(0)       0.89      0.79      0.84      1551
        accuracy                           0.77      2002
       macro avg       0.69      0.73      0.70      2002
    weighted avg       0.80      0.77      0.78      2002
-      </pre>
-  </div>
+          </pre>
+        </div>
 
-  <div class="margin-right-block">
-    <b>Figure 4.</b> Test confusion matrix for <code>oversample_minority</code> (WeightedRandomSampler). Oversampling boosts pneumonia recall dramatically but introduces more false positives among normal studies.
-  </div>
-</div>
+        <!-- Slide 3: augment_minority -->
+        <div class="slide" data-caption-id="caption-3">
+          <h2 class="results-header">Additional Minority Augmentations: <code>augment_minority</code></h2>
+          <hr class="results-divider">
 
-<!-- RESULTS: augment_minority -->
-<div class="content-margin-container">
-  <div class="margin-left-block"></div>
+          <img src="./images/Augment_Conf.png" class="conf-img" alt="augment_minority confusion matrix" />
+          <img src="./images/Augment_ROC.png" class="roc-img" alt="augment_minority ROC curve" style="margin-top:10px;" />
 
-  <div class="main-content-block">
-
-      <h2 class="results-header">Additional Minority Augmentations: <code>augment_minority</code></h2>
-      <hr class="results-divider">
-
-      <img src="./images/Augment_Conf.png" class="conf-img" alt="augment_minority confusion matrix" />
-      <img src="./images/Augment_ROC.png" class="roc-img" alt="augment_minority ROC curve" style="margin-top:10px;" />
-
-      <pre class="results-pre">
+          <pre class="results-pre">
 FINAL TEST RESULTS: augment_minority
   Test loss 1.6580 acc 0.7732
 
@@ -798,27 +820,18 @@ no_pneumonia(0)       0.77      1.00      0.87      1551
        accuracy                           0.77      2002
       macro avg       0.47      0.50      0.44      2002
    weighted avg       0.64      0.77      0.68      2002
-      </pre>
-  </div>
+          </pre>
+        </div>
 
-  <div class="margin-right-block">
-    <b>Figure 5.</b> Test confusion matrix for <code>augment_minority</code> (stronger transforms on pneumonia-only). Augmentation alone does not fix the bias: the model still predicts “no pneumonia” for essentially all positive cases.
-  </div>
-</div>
+        <!-- Slide 4: class_weighted_NLL -->
+        <div class="slide" data-caption-id="caption-4">
+          <h2 class="results-header">Class Weighting: <code>class_weighted_NLL</code></h2>
+          <hr class="results-divider">
 
-<!-- RESULTS: class_weighted_NLL -->
-<div class="content-margin-container">
-  <div class="margin-left-block"></div>
+          <img src="./images/ClassWeighted_Conf.png" class="conf-img" alt="class_weighted_NLL confusion matrix" />
+          <img src="./images/ClassWeighted_ROC.png" class="roc-img" alt="class_weighted_NLL ROC curve" style="margin-top:10px;" />
 
-  <div class="main-content-block">
-
-      <h2 class="results-header">Class Weighting: <code>class_weighted_NLL</code></h2>
-      <hr class="results-divider">
-
-      <img src="./images/ClassWeighted_Conf.png" class="conf-img" alt="class_weighted_NLL confusion matrix" />
-      <img src="./images/ClassWeighted_ROC.png" class="roc-img" alt="class_weighted_NLL ROC curve" style="margin-top:10px;" />
-
-      <pre class="results-pre">
+          <pre class="results-pre">
 FINAL TEST RESULTS: class_weighted_NLL
   Test loss 0.6264 acc 0.7967
 
@@ -831,27 +844,18 @@ no_pneumonia(0)       0.84      0.92      0.87      1551
        accuracy                           0.80      2002
       macro avg       0.70      0.65      0.67      2002
    weighted avg       0.78      0.80      0.78      2002
-      </pre>
-  </div>
+          </pre>
+        </div>
 
-  <div class="margin-right-block">
-    <b>Figure 6.</b> Test confusion matrix for <code>class_weighted_NLL</code>. Inverse-frequency class weights meaningfully improve pneumonia recall while preserving high accuracy on the majority class.
-  </div>
-</div>
+        <!-- Slide 5: focal_loss -->
+        <div class="slide" data-caption-id="caption-5">
+          <h2 class="results-header">Focal Loss: <code>focal_loss</code></h2>
+          <hr class="results-divider">
 
-<!-- RESULTS: focal_loss -->
-<div class="content-margin-container">
-  <div class="margin-left-block"></div>
+          <img src="./images/Focal_Conf.png" class="conf-img" alt="focal_loss confusion matrix" />
+          <img src="./images/Focal_ROC.png" class="roc-img" alt="focal_loss ROC curve" style="margin-top:10px;" />
 
-  <div class="main-content-block">
-
-      <h2 class="results-header">Focal Loss: <code>focal_loss</code></h2>
-      <hr class="results-divider">
-
-      <img src="./images/Focal_Conf.png" class="conf-img" alt="focal_loss confusion matrix" />
-      <img src="./images/Focal_ROC.png" class="roc-img" alt="focal_loss ROC curve" style="margin-top:10px;" />
-
-      <pre class="results-pre">
+          <pre class="results-pre">
 FINAL TEST RESULTS: focal_loss
   Test loss 0.0549 acc 0.8127
 
@@ -864,27 +868,18 @@ no_pneumonia(0)       0.84      0.94      0.89      1551
        accuracy                           0.81      2002
       macro avg       0.74      0.66      0.68      2002
    weighted avg       0.79      0.81      0.80      2002
-      </pre>
-  </div>
+          </pre>
+        </div>
 
-  <div class="margin-right-block">
-    <b>Figure 7.</b> Test confusion matrix for <code>focal_loss</code>. Focal Loss further sharpens minority performance while keeping overall accuracy high, at the cost of extra hyperparameters.
-  </div>
-</div>
+        <!-- Slide 6: caf_nll -->
+        <div class="slide" data-caption-id="caption-6">
+          <h2 class="results-header">CAF Mixed Loss: <code>caf_nll</code></h2>
+          <hr class="results-divider">
 
-<!-- RESULTS: caf_nll -->
-<div class="content-margin-container">
-  <div class="margin-left-block"></div>
+          <img src="./images/CAF_Conf.png" class="conf-img" alt="caf_nll confusion matrix" />
+          <img src="./images/Caf_ROC.png" class="roc-img" alt="caf_nll ROC curve" style="margin-top:10px;" />
 
-  <div class="main-content-block">
-
-      <h2 class="results-header">CAF Mixed Loss: <code>caf_nll</code></h2>
-      <hr class="results-divider">
-
-      <img src="./images/CAF_Conf.png" class="conf-img" alt="caf_nll confusion matrix" />
-      <img src="./images/Caf_ROC.png" class="roc-img" alt="caf_nll ROC curve" style="margin-top:10px;" />
-
-      <pre class="results-pre">
+          <pre class="results-pre">
 FINAL TEST RESULTS: caf_nll
   Test loss 0.2097 acc 0.8102
 
@@ -901,105 +896,125 @@ no_pneumonia(0)       0.86      0.91      0.88      1551
        accuracy                           0.81      2002
       macro avg       0.73      0.69      0.71      2002
    weighted avg       0.80      0.81      0.80      2002
-      </pre>
+          </pre>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="margin-right-block">
+      <div class="slide-caption active" id="caption-1">
+        <b>Figure 3.</b> Test confusion matrix for <code>baseline_ViT</code> (no explicit imbalance handling). The model almost never predicts pneumonia: minority recall is essentially zero despite a superficially reasonable overall accuracy.
+      </div>
+      <div class="slide-caption" id="caption-2">
+        <b>Figure 4.</b> Test confusion matrix for <code>oversample_minority</code> (WeightedRandomSampler). Oversampling boosts pneumonia recall dramatically but introduces more false positives among normal studies.
+      </div>
+      <div class="slide-caption" id="caption-3">
+        <b>Figure 5.</b> Test confusion matrix for <code>augment_minority</code> (stronger transforms on pneumonia-only). Augmentation alone does not fix the bias: the model still predicts “no pneumonia” for essentially all positive cases.
+      </div>
+      <div class="slide-caption" id="caption-4">
+        <b>Figure 6.</b> Test confusion matrix for <code>class_weighted_NLL</code>. Inverse-frequency class weights meaningfully improve pneumonia recall while preserving high accuracy on the majority class.
+      </div>
+      <div class="slide-caption" id="caption-5">
+        <b>Figure 7.</b> Test confusion matrix for <code>focal_loss</code>. Focal Loss further sharpens minority performance while keeping overall accuracy high, at the cost of extra hyperparameters.
+      </div>
+      <div class="slide-caption" id="caption-6">
+        <b>Figure 8.</b> Test confusion matrix for <code>caf_nll</code> (mixed weighted NLL + Focal Loss, λ = 0.8). CAF provides a strong compromise, further improving pneumonia F1 while maintaining robust majority-class performance.
+      </div>
+    </div>
   </div>
 
-  <div class="margin-right-block">
-    <b>Figure 8.</b> Test confusion matrix for <code>caf_nll</code> (mixed weighted NLL + Focal Loss, λ = 0.8). CAF provides a strong compromise, further improving pneumonia F1 while maintaining robust majority-class performance.
-  </div>
-</div>
+  <!-- RESULTS: summary table -->
+  <div class="content-margin-container">
+    <div class="margin-left-block"></div>
 
-<!-- RESULTS: summary table -->
-<div class="content-margin-container">
-  <div class="margin-left-block"></div>
+    <div class="main-content-block">
+      <h2 class="results-header">Summary of Test Performance Across Methods</h2>
+      <hr class="results-divider">
 
-  <div class="main-content-block">
-    <h2 class="results-header">Summary of Test Performance Across Methods</h2>
-    <hr class="results-divider">
-
-    <table class="results-table">
-      <caption>
-        Best score per row is shown in <b>bold</b>. Approximate 95% confidence
-        intervals from Hoeffding's inequality: accuracy ±0.03 (absolute),
-        pneumonia recall ±0.06–0.07 (absolute).
-      </caption>
-      <thead>
-        <tr>
-          <th>Metric</th>
-          <th><code>baseline_ViT</code></th>
-          <th><code>oversample_minority</code></th>
-          <th><code>augment_minority</code></th>
-          <th><code>class_weighted_NLL</code></th>
-          <th><code>focal_loss</code></th>
-          <th><code>caf_nll</code></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Accuracy</td>
-          <td>0.7757</td>
-          <td>0.7657</td>
-          <td>0.7732</td>
-          <td>0.7967</td>
-          <td><b>0.8127</b></td>
-          <td>0.8102</td>
-        </tr>
-        <tr>
-          <td>Pneumonia precision (class 1)</td>
-          <td><b>0.75</b></td>
-          <td>0.49</td>
-          <td>0.17</td>
-          <td>0.57</td>
-          <td>0.64</td>
-          <td>0.60</td>
-        </tr>
-        <tr>
-          <td>Pneumonia recall (class 1)</td>
-          <td>0.01</td>
-          <td><b>0.68</b></td>
-          <td>0.00</td>
-          <td>0.38</td>
-          <td>0.39</td>
-          <td>0.48</td>
-        </tr>
-        <tr>
-          <td>Pneumonia F1 (class 1)</td>
-          <td>0.01</td>
-          <td><b>0.57</b></td>
-          <td>0.00</td>
-          <td>0.46</td>
-          <td>0.48</td>
-          <td>0.53</td>
-        </tr>
-        <tr>
-          <td>Macro precision</td>
-          <td><b>0.76</b></td>
-          <td>0.69</td>
-          <td>0.47</td>
-          <td>0.70</td>
-          <td>0.74</td>
-          <td>0.73</td>
-        </tr>
-        <tr>
-          <td>Macro recall</td>
-          <td>0.50</td>
-          <td><b>0.73</b></td>
-          <td>0.50</td>
-          <td>0.65</td>
-          <td>0.66</td>
-          <td>0.69</td>
-        </tr>
-        <tr>
-          <td>Macro F1</td>
-          <td>0.44</td>
-          <td>0.70</td>
-          <td>0.44</td>
-          <td>0.67</td>
-          <td>0.68</td>
-          <td><b>0.71</b></td>
-        </tr>
-      </tbody>
-    </table>
+      <table class="results-table">
+        <caption>
+          Best score per row is shown in <b>bold</b>. Approximate 95% confidence
+          intervals from Hoeffding's inequality: accuracy ±0.03 (absolute),
+          pneumonia recall ±0.06–0.07 (absolute).
+        </caption>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th><code>baseline_ViT</code></th>
+            <th><code>oversample_minority</code></th>
+            <th><code>augment_minority</code></th>
+            <th><code>class_weighted_NLL</code></th>
+            <th><code>focal_loss</code></th>
+            <th><code>caf_nll</code></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Accuracy</td>
+            <td>0.7757</td>
+            <td>0.7657</td>
+            <td>0.7732</td>
+            <td>0.7967</td>
+            <td><b>0.8127</b></td>
+            <td>0.8102</td>
+          </tr>
+          <tr>
+            <td>Pneumonia precision (class 1)</td>
+            <td><b>0.75</b></td>
+            <td>0.49</td>
+            <td>0.17</td>
+            <td>0.57</td>
+            <td>0.64</td>
+            <td>0.60</td>
+          </tr>
+          <tr>
+            <td>Pneumonia recall (class 1)</td>
+            <td>0.01</td>
+            <td><b>0.68</b></td>
+            <td>0.00</td>
+            <td>0.38</td>
+            <td>0.39</td>
+            <td>0.48</td>
+          </tr>
+          <tr>
+            <td>Pneumonia F1 (class 1)</td>
+            <td>0.01</td>
+            <td><b>0.57</b></td>
+            <td>0.00</td>
+            <td>0.46</td>
+            <td>0.48</td>
+            <td>0.53</td>
+          </tr>
+          <tr>
+            <td>Macro precision</td>
+            <td><b>0.76</b></td>
+            <td>0.69</td>
+            <td>0.47</td>
+            <td>0.70</td>
+            <td>0.74</td>
+            <td>0.73</td>
+          </tr>
+          <tr>
+            <td>Macro recall</td>
+            <td>0.50</td>
+            <td><b>0.73</b></td>
+            <td>0.50</td>
+            <td>0.65</td>
+            <td>0.66</td>
+            <td>0.69</td>
+          </tr>
+          <tr>
+            <td>Macro F1</td>
+            <td>0.44</td>
+            <td>0.70</td>
+            <td>0.44</td>
+            <td>0.67</td>
+            <td>0.68</td>
+            <td><b>0.71</b></td>
+          </tr>
+        </tbody>
+      </table>
 
       <p>
         Our test set has 2,002 patients (451 pneumonia-positive, 1,551 pneumonia-negative).
@@ -1012,12 +1027,12 @@ no_pneumonia(0)       0.86      0.91      0.88      1551
         about 1% recall for the baseline ViT to roughly 48–68% recall for the CAF and
         oversampling methods are far larger than this uncertainty.
       </p>
-  </div>
+    </div>
 
-  <div class="margin-right-block">
-    <b>Table 1.</b> Side-by-side comparison of test metrics across all imbalance strategies. Bold entries denote the best metric value in each row.
+    <div class="margin-right-block">
+      <b>Table 1.</b> Side-by-side comparison of test metrics across all imbalance strategies. Bold entries denote the best metric value in each row.
+    </div>
   </div>
-</div>
 
 
   <!-- IMPLEMENTATION DETAILS -->
@@ -1213,6 +1228,46 @@ evaluate(model, loader, criterion, return_scores):<br>
     </div>
   </div>
 
+  <!-- SLIDESHOW SCRIPT -->
+  <script>
+    (function() {
+      const slideshow = document.getElementById('results-slideshow');
+      if (!slideshow) return;
+
+      const slides = slideshow.querySelectorAll('.slide');
+      const captions = document.querySelectorAll('.margin-right-block .slide-caption');
+      const indicator = document.getElementById('slide-indicator');
+      let currentSlide = 0;
+
+      function showSlide(idx) {
+        if (!slides.length) return;
+        const n = slides.length;
+        currentSlide = (idx + n) % n;
+
+        slides.forEach((s, i) => {
+          s.classList.toggle('active', i === currentSlide);
+        });
+
+        captions.forEach((c, i) => {
+          c.classList.toggle('active', i === currentSlide);
+        });
+
+        if (indicator) {
+          indicator.textContent = (currentSlide + 1) + ' / ' + n;
+        }
+      }
+
+      window.nextSlide = function() {
+        showSlide(currentSlide + 1);
+      };
+      window.prevSlide = function() {
+        showSlide(currentSlide - 1);
+      };
+
+      // Initialize
+      showSlide(0);
+    })();
+  </script>
 
 </body>
 
