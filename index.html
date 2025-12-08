@@ -916,7 +916,11 @@ no_pneumonia(0)       0.86      0.91      0.88      1551
     <hr class="results-divider">
 
     <table class="results-table">
-      <caption>Best score per row is shown in <b>bold</b>.</caption>
+      <caption>
+        Best score per row is shown in <b>bold</b>. Approximate 95% confidence
+        intervals from Hoeffding's inequality: accuracy ±0.03 (absolute),
+        pneumonia recall ±0.06–0.07 (absolute).
+      </caption>
       <thead>
         <tr>
           <th>Metric</th>
@@ -1003,6 +1007,18 @@ no_pneumonia(0)       0.86      0.91      0.88      1551
         </tr>
       </tbody>
     </table>
+
+      <p>
+        Our test set has 2,002 patients (451 pneumonia-positive, 1,551 pneumonia-negative).
+        For each model, we can treat correctness on each test example as a 0–1 variable and
+        apply Hoeffding's inequality. Hoeffding's inequality implies that with 95% confidence,
+        the true accuracy is within about ±3 percentage points of the reported test accuracy.
+        Applying the same reasoning to pneumonia recall, using only the 451 positive patients,
+        we get a 95% confidence band of roughly ±6–7 percentage points. While sampling noise
+        can shift our pneumonia recall by several percentage points, the gains we see from
+        about 1% recall for the baseline ViT to roughly 48–68% recall for the CAF and
+        oversampling methods are far larger than this uncertainty.
+      </p>
   </div>
 
   <div class="margin-right-block">
