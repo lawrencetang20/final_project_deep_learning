@@ -344,6 +344,16 @@
     background: #e8e8e8;
   }
 
+  /* Summary box inside each slide */
+  .summary-box {
+    margin-top: 10px;
+    font-size: 13px;
+    background: #f5f7fb;
+    border-left: 3px solid #c0c7ff;
+    padding: 8px 10px;
+    border-radius: 4px;
+  }
+
 </style>
 
 <title>Diagnosing the Imbalance: optimizing Vision Transformers for Pneumonia Detection in Chest X-Rays</title>
@@ -702,28 +712,10 @@
         <li><b>CAF-style mixing refines this trade-off.</b> Focal Loss and the CAF mixed loss further improve minority F1 while keeping accuracy high, suggesting that modestly more complex objectives can yield better screening behavior without altering the backbone.</li>
       </ul>
 
-      <p>
-        We summarize performance for each imbalance strategy on the held-out test set. For each experiment we save a confusion matrix and the ROC curve and report key metrics.
-      </p>
-
-      <ul>
-        <li><b>baseline_ViT</b>: achieves fairly high overall accuracy but almost never predicts pneumonia, leading to extremely low minority recall</li>
-
-        <li><b>oversample_minority</b>:  improves pneumonia recall (from roughly 1 percent to roughly 68 percent), but results in more false positives and a slight drop in accuracy.</li>
-
-        <li><b>augment_minority</b>: the augment minority configuration alone does not fix the bias as the model still collapses to predicting “no pneumonia” for almost every image in the test set.</li>
-
-        <li><b>class_weighted_NLL</b>: meaningfully improves pneumonia recall while preserving high accuracy on the majority class.</li>
-
-        <li><b>focal_loss</b>: further improves minority performance while keeping overall accuracy high, with a slight improvement in minority F1 compared to just class weighting.</li>
-
-        <li><b>caf_nll</b>: has both high overall performance while further boosting pneumonia recall compared to plain weighting.</li>
-      </ul>
-
     </div>
 
     <div class="margin-right-block">
-      Figures 3–8 provide confusion matrices and metric blocks for each experiment. ROC curves are saved alongside the confusion matrices and can be displayed as paired subfigures if desired.
+      Figures 3–8 provide confusion matrices and metric blocks for each experiment. ROC curves are saved alongside the confusion matrices and can be displayed as paired subfigures if desired. Press previous and next buttons to look through all figures.
     </div>
   </div>
 
@@ -765,6 +757,10 @@ no_pneumonia(0)       0.78      1.00      0.87      1551
       macro avg       0.76      0.50      0.44      2002
    weighted avg       0.77      0.78      0.68      2002
           </pre>
+
+          <div class="summary-box">
+            <b>Summary:</b> <code>baseline_ViT</code> achieves fairly high overall accuracy but almost never predicts pneumonia, leading to extremely low minority recall.
+          </div>
         </div>
 
         <!-- Slide 2: oversample_minority -->
@@ -793,6 +789,10 @@ no_pneumonia(0)       0.89      0.79      0.84      1551
       macro avg       0.69      0.73      0.70      2002
    weighted avg       0.80      0.77      0.78      2002
           </pre>
+
+          <div class="summary-box">
+            <b>Summary:</b> <code>oversample_minority</code> improves pneumonia recall (from roughly 1&nbsp;percent to roughly 68&nbsp;percent), but results in more false positives and a slight drop in accuracy.
+          </div>
         </div>
 
         <!-- Slide 3: augment_minority -->
@@ -821,6 +821,10 @@ no_pneumonia(0)       0.77      1.00      0.87      1551
       macro avg       0.47      0.50      0.44      2002
    weighted avg       0.64      0.77      0.68      2002
           </pre>
+
+          <div class="summary-box">
+            <b>Summary:</b> <code>augment_minority</code> alone does not fix the bias: the model still collapses to predicting “no pneumonia” for almost every image in the test set.
+          </div>
         </div>
 
         <!-- Slide 4: class_weighted_NLL -->
@@ -845,6 +849,10 @@ no_pneumonia(0)       0.84      0.92      0.87      1551
       macro avg       0.70      0.65      0.67      2002
    weighted avg       0.78      0.80      0.78      2002
           </pre>
+
+          <div class="summary-box">
+            <b>Summary:</b> <code>class_weighted_NLL</code> meaningfully improves pneumonia recall while preserving high accuracy on the majority class.
+          </div>
         </div>
 
         <!-- Slide 5: focal_loss -->
@@ -869,6 +877,10 @@ no_pneumonia(0)       0.84      0.94      0.89      1551
       macro avg       0.74      0.66      0.68      2002
    weighted avg       0.79      0.81      0.80      2002
           </pre>
+
+          <div class="summary-box">
+            <b>Summary:</b> <code>focal_loss</code> further improves minority performance while keeping overall accuracy high, with a slight improvement in minority F1 compared to just class weighting.
+          </div>
         </div>
 
         <!-- Slide 6: caf_nll -->
@@ -897,6 +909,10 @@ no_pneumonia(0)       0.86      0.91      0.88      1551
       macro avg       0.73      0.69      0.71      2002
    weighted avg       0.80      0.81      0.80      2002
           </pre>
+
+          <div class="summary-box">
+            <b>Summary:</b> <code>caf_nll</code> has both high overall performance while further boosting pneumonia recall compared to plain weighting.
+          </div>
         </div>
 
       </div>
