@@ -7,6 +7,7 @@ Block 2: datasets, model, loss definitions
 Block 3: training loop, experiment runner, metric/figure saving
 """
 
+#imports
 import os
 from pathlib import Path
 import random
@@ -46,7 +47,7 @@ IMG_SIZE = 224
 BATCH_SIZE = 32
 LR = 3e-4
 NUM_EPOCHS = 15          # main training epochs for each experiment
-NUM_EPOCHS_TUNE = 1      # (optional) λ tuning epochs for CAF; here we keep λ fixed
+NUM_EPOCHS_TUNE = 5      # (optional) λ tuning epochs for CAF; here we keep λ fixed
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # For CAF mix loss (weighted NLL + focal)
@@ -67,9 +68,8 @@ torch.manual_seed(SEED)
 torch.cuda.manual_seed_all(SEED)
 
 
-# ============================================
 # BLOCK 1: RSNA pneumonia via kagglehub, splits, transforms
-# ============================================
+
 
 def load_rsna_dataframe():
     """
@@ -146,7 +146,7 @@ def compute_class_weights(train_df):
 
     Returns:
         class_weights_np: np.ndarray of shape [num_classes]
-        oversample_factor: int, ~1 / positive_fraction (for duplicate+augment)
+        oversample_factor: int, ~1 / positive_fraction
     """
     train_class_counts = train_df["target"].value_counts().sort_index()
     print("\nTrain class counts (for weighting):")
@@ -161,7 +161,6 @@ def compute_class_weights(train_df):
 
     oversample_factor = int(round(1.0 / pos_fraction))
     oversample_factor = max(1, oversample_factor)
-    print("OVERSAMPLE_FACTOR (for duplicate+augment combo):", oversample_factor)
 
     return class_weights_np, oversample_factor
 
@@ -208,9 +207,12 @@ eval_transform = transforms.Compose(
 )
 
 
-# ============================================
+
+###################################
+###################################
+###################################
+
 # BLOCK 2: Dataset, ViT model, losses
-# ============================================
 
 class RsnaPneumoniaDataset(Dataset):
     """
@@ -426,9 +428,11 @@ class MixedCAFWeightedLoss(nn.Module):
         return (1.0 - self.lam) * loss_w + self.lam * loss_f
 
 
-# ============================================
+###################################
+###################################
+###################################
+
 # BLOCK 3: training, eval, experiment runner, figure saving
-# ============================================
 
 def plot_confusion_matrix(
     cm,
@@ -748,9 +752,12 @@ def run_experiment(
     }
 
 
-# ============================================
+###################################
+###################################
+###################################
+
 # MAIN: run all experiments
-# ============================================
+
 
 def main():
     # 1) Load data + splits
@@ -762,18 +769,6 @@ def main():
     class_weights_tensor = torch.tensor(
         class_weights_np, dtype=torch.float32, device=DEVICE
     )
-
-    # (Optional) explicit duplicate+augment combo dataframe for "oversample_plus_augment"
-    pos = train_df[train_df.target == 1]
-    neg = train_df[train_df.target == 0]
-    combo_pos = pd.concat([pos] * oversample_factor, ignore_index=True)
-    combo_train_df = (
-        pd.concat([neg, combo_pos], ignore_index=True)
-        .sample(frac=1, random_state=SEED)
-        .reset_index(drop=True)
-    )
-    print("\nCombined oversample+augment train class counts:\n",
-          combo_train_df["target"].value_counts())
 
     results = []
 
@@ -872,22 +867,6 @@ def main():
             use_caf_nll=True,
         )
     )
-
-    # 7) Example hook: "oversample_plus_augment" using combo_train_df
-    # results.append(
-    #     run_experiment(
-    #         "oversample_plus_augment",
-    #         train_df=combo_train_df,
-    #         val_df=val_df,
-    #         test_df=test_df,
-    #         class_weights_tensor=class_weights_tensor,
-    #         use_oversample=False,
-    #         use_minority_aug=True,
-    #         use_class_weighted=False,
-    #         use_focal_loss=False,
-    #         use_caf_nll=False,
-    #     )
-    # )
 
     print("\n\n================ SUMMARY (Test metrics) ================")
     for r in results:
