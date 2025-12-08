@@ -290,6 +290,29 @@
   margin-top: 10px;
   white-space: pre;
 }
+.results-table {
+width: 100%;
+border-collapse: collapse;
+font-size: 13px;
+margin-top: 16px;
+}
+.results-table th,
+.results-table td {
+border: 1px solid #ddd;
+padding: 6px 8px;
+text-align: center;
+}
+.results-table th {
+background-color: #f2f4ff;
+font-weight: 600;
+}
+.results-table caption {
+caption-side: top;
+text-align: left;
+font-weight: 600;
+margin-bottom: 6px;
+}
+
 
 </style>
 
@@ -635,7 +658,7 @@
     </div>
 
     <div class="margin-right-block">
-      Figures 3–9 provide confusion matrices and metric blocks for each experiment. ROC curves are saved alongside the confusion matrices and can be displayed as paired subfigures if desired.
+      Figures 3–8 provide confusion matrices and metric blocks for each experiment. ROC curves are saved alongside the confusion matrices and can be displayed as paired subfigures if desired.
     </div>
   </div>
 
@@ -853,6 +876,108 @@ no_pneumonia(0)       0.86      0.91      0.88      1551
   </div>
 </div>
 
+<!-- RESULTS: summary table -->
+<div class="content-margin-container">
+  <div class="margin-left-block"></div>
+
+  <div class="main-content-block">
+    <h2 class="results-header">Summary of Test Performance Across Methods</h2>
+    <hr class="results-divider">
+
+    <table class="results-table">
+      <caption>Best score per row is shown in <b>bold</b>.</caption>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th><code>baseline_ViT</code></th>
+          <th><code>oversample_minority</code></th>
+          <th><code>augment_minority</code></th>
+          <th><code>class_weighted_NLL</code></th>
+          <th><code>focal_loss</code></th>
+          <th><code>caf_nll</code></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Test loss (↓)</td>
+          <td>0.4647</td>
+          <td>0.4989</td>
+          <td>1.6580</td>
+          <td>0.6264</td>
+          <td><b>0.0549</b></td>
+          <td>0.2097</td>
+        </tr>
+        <tr>
+          <td>Accuracy</td>
+          <td>0.7757</td>
+          <td>0.7657</td>
+          <td>0.7732</td>
+          <td>0.7967</td>
+          <td><b>0.8127</b></td>
+          <td>0.8102</td>
+        </tr>
+        <tr>
+          <td>Pneumonia precision (class 1)</td>
+          <td><b>0.75</b></td>
+          <td>0.49</td>
+          <td>0.17</td>
+          <td>0.57</td>
+          <td>0.64</td>
+          <td>0.60</td>
+        </tr>
+        <tr>
+          <td>Pneumonia recall (class 1)</td>
+          <td>0.01</td>
+          <td><b>0.68</b></td>
+          <td>0.00</td>
+          <td>0.38</td>
+          <td>0.39</td>
+          <td>0.48</td>
+        </tr>
+        <tr>
+          <td>Pneumonia F1 (class 1)</td>
+          <td>0.01</td>
+          <td><b>0.57</b></td>
+          <td>0.00</td>
+          <td>0.46</td>
+          <td>0.48</td>
+          <td>0.53</td>
+        </tr>
+        <tr>
+          <td>Macro precision</td>
+          <td><b>0.76</b></td>
+          <td>0.69</td>
+          <td>0.47</td>
+          <td>0.70</td>
+          <td>0.74</td>
+          <td>0.73</td>
+        </tr>
+        <tr>
+          <td>Macro recall</td>
+          <td>0.50</td>
+          <td><b>0.73</b></td>
+          <td>0.50</td>
+          <td>0.65</td>
+          <td>0.66</td>
+          <td>0.69</td>
+        </tr>
+        <tr>
+          <td>Macro F1</td>
+          <td>0.44</td>
+          <td>0.70</td>
+          <td>0.44</td>
+          <td>0.67</td>
+          <td>0.68</td>
+          <td><b>0.71</b></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="margin-right-block">
+    <b>Table 1.</b> Side-by-side comparison of test metrics across all imbalance strategies. Bold entries denote the best metric value in each row.
+  </div>
+</div>
 
 
   <!-- IMPLEMENTATION DETAILS -->
@@ -894,7 +1019,7 @@ evaluate(model, loader, criterion, return_scores):<br>
 
     </div>
     <div class="margin-right-block">
-      The full source code, including the CAF-style mixed loss implementation and experiment scripts, can be packaged alongside this HTML in a <code>zip</code> file that renders offline, following the course submission instructions.
+      The full source code, including the CAF-style mixed loss implementation and experiment scripts, is package i the <code>code</code> folder.
     </div>
   </div>
 
@@ -952,7 +1077,7 @@ evaluate(model, loader, criterion, return_scores):<br>
       </p>
     </div>
     <div class="margin-right-block" style="transform: translate(0%, -100%);">
-      Once experiments finish for any additional custom methods (e.g., oversample-plus-augment with CAF), this section can be extended with an ablation comparing different $\lambda$ values and combinations of sampling and loss shaping.
+      This section details all the methods used in the project. We detail quantitatively and qualitatively how each method performed.
     </div>
   </div>
 

@@ -41,18 +41,18 @@ import pydicom
 # --------------------------------------------
 
 SEED = 42
-VAL_SIZE = 0.25                 # 25% of full data for validation
-TEST_FRACTION_FROM_TRAIN = 0.10 # 10% of remaining train -> held-out test
+VAL_SIZE = 0.25
+TEST_FRACTION_FROM_TRAIN = 0.10
 IMG_SIZE = 224
 BATCH_SIZE = 32
 LR = 3e-4
-NUM_EPOCHS = 15          # main training epochs for each experiment
-NUM_EPOCHS_TUNE = 5      # (optional) λ tuning epochs for CAF; here we keep λ fixed
+NUM_EPOCHS = 15
+NUM_EPOCHS_TUNE = 5
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # For CAF mix loss (weighted NLL + focal)
 CAF_LAMBDA_DEFAULT = 0.8
-FOCAL_ALPHA = [0.25, 0.75]   # [no-pneumonia, pneumonia]
+FOCAL_ALPHA = [0.25, 0.75] # [no-pneumonia, pneumonia]
 FOCAL_GAMMA = 2.0
 
 # Where to save figures for the HTML blog
@@ -69,8 +69,6 @@ torch.cuda.manual_seed_all(SEED)
 
 
 # BLOCK 1: RSNA pneumonia via kagglehub, splits, transforms
-
-
 def load_rsna_dataframe():
     """
     Download RSNA pneumonia dataset via kagglehub and build a patient-level
