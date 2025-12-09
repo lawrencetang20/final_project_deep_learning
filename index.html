@@ -328,21 +328,27 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
-    gap: 12px;
-    font-size: 14px;
+    margin-bottom: 12px;
+    gap: 16px;
+    font-size: 18px;        /* larger text */
   }
+
   .slideshow-controls button {
-    padding: 4px 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background: #f5f5f5;
+    padding: 10px 20px;     /* larger buttons */
+    border-radius: 6px;
+    border: 1px solid #8ec7ff;
+    background: #cfe9ff;    /* light blue */
     cursor: pointer;
-    font-size: 13px;
+    font-size: 18px;        /* larger text */
+    color: #003b66;         /* dark blue text */
+    transition: 0.2s ease;
   }
+
   .slideshow-controls button:hover {
-    background: #e8e8e8;
+    background: #b7dcff;    /* slightly darker on hover */
+    border-color: #75bbff;
   }
+
 
   /* Summary box inside each slide */
   .summary-box {
@@ -550,7 +556,7 @@
       </p>
 
       <p>
-        In medical imaging, various prior works have explored imbalance losses, but typically, they used CNN-based architectures and didn’t use controlled comparisons. For example, Bolhassani studies COVID-19 vs. non-COVID chest X-ray classification on the imbalanced CoronaHack dataset using a ResNet50 backbone. They compare standard cross-entropy versus Focal Loss, reporting that Focal can improve performance on the minority class. <a href="#ref_5">[5]</a> However, that work does not examine class-weighted baselines, hybrid losses, or even data-level rebalancing, which can make it hard to tell whether focal is actually better than simpler tricks like inverse-frequency reweighting or oversampling. More recently, Bassi and Attux’s LungX framework uses a hybrid EfficientNet–Vision Transformer architecture for pneumonia detection and shows that ViT-style models transfer well to chest X-ray tasks. However, their focus is on architectural design and multi-task performance rather than on systematically dissecting class imbalance. <a href="#ref_6">[6]</a> This project extends upon these lines of work by holding the ViT architecture, data splits, and training pipeline fixed on the RSNA pneumonia task and varying only loss and sampling strategies. In doing so, we extend prior CNN-based imbalance studies to a ViT backbone, directly compare focal, class-weighted, and hybrid CAF losses against oversampling and minority-focused augmentation, and emphasize minority-class recall and confusion matrices rather than only global AUC—addressing a gap in how imbalance methods are evaluated for transformer-based medical image classifiers.
+        In medical imaging, various prior works have explored imbalance losses, but typically, they used CNN-based architectures and didn’t use controlled comparisons. For example, Bolhassani studies COVID-19 vs. non-COVID chest X-ray classification on the imbalanced CoronaHack dataset using a ResNet50 backbone. They compare standard cross-entropy versus Focal Loss, reporting that Focal can improve performance on the minority class. <a href="#ref_5">[5]</a> However, that work does not examine class-weighted baselines, hybrid losses, or even data-level rebalancing, which can make it hard to tell whether focal is actually better than simpler tricks like inverse-frequency reweighting or oversampling. More recently, Bassi and Attux’s LungX framework uses a hybrid EfficientNet–Vision Transformer architecture for pneumonia detection and shows that ViT-style models transfer well to chest X-ray tasks. However, their focus is on architectural design and multi-task performance rather than on systematically dissecting class imbalance. <a href="#ref_6">[6]</a> This project extends upon these lines of work by holding the ViT architecture, data splits, and training pipeline fixed on the RSNA pneumonia task and varying only loss and sampling strategies. In doing so, we directly compare focal, class-weighted, and hybrid CAF losses against oversampling and minority-focused augmentation, and emphasize minority-class recall and confusion matrices rather than only global AUC—addressing a gap in how imbalance methods are evaluated for transformer-based medical image classifiers.
       </p>
     </div>
     <div class="margin-right-block">
@@ -704,6 +710,11 @@
         <li><b>Simple rebalancing already changes the regime.</b> Oversampling and class-weighted NLL shift the model into a regime where pneumonia recall is non-trivial, at the cost of more false positives.</li>
         <li><b>CAF-style mixing refines this trade-off.</b> Focal Loss and the CAF mixed loss further improve minority F1 while keeping accuracy high, suggesting that modestly more complex objectives can yield better screening behavior without altering the backbone.</li>
       </ul>
+
+      <p>
+        <b>Use NEXT and PREVIOUS buttons below to cycle through Figures 3–8, which show confusion matrices, ROC curves, and detailed metrics for each experiment.</b>
+      </p>
+
 
     </div>
 
