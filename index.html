@@ -474,9 +474,6 @@
         <li>CAF-style mixed loss that blends class-weighted NLL with Focal Loss.</li>
       </ul>
       <p>
-        By running all methods in a shared codebase on the same dataset, we aim to understand whether more complicated losses like Focal Loss and CAF-style mixes actually help compared to simpler tricks like oversampling or data augmentation. We wanted to isolate how loss and data rebalancing in an imbalanced setting can alter ViT behavior. We wanted to focus on metrics that are particularly relevant for screening such as accuracy, ROC-AUC, and sensitivity (minority-class recall).
-      </p>
-      <p>
         Our study is not about beating state-of-the-art on RSNA, but about treating loss shaping and sampling as a “knob” on top of a fixed ViT backbone and asking what actually changes in a clinically meaningful way. Concretely, our contributions are:
       </p>
       <ol>
@@ -670,7 +667,7 @@
 
       <b>Experimental design and baselines.</b><br>
       <p>
-        We deliberately keep the experimental design minimalistic in order to stress-test loss shaping and sampling rather than architecture search. All methods share the same ViT-B/16 backbone, preprocessing pipeline, optimizer (Adam, learning rate 3e-4), batch size, number of epochs, and train/val/test splits. The <code>baseline_ViT</code> configuration acts as a “do nothing” reference for how a standard ViT behaves under raw class imbalance. Each subsequent configuration changes exactly one dimension at a time so that relative differences can be attributed to that intervention rather than confounded by unrelated hyperparameter changes. The configurations we run are:
+        We deliberately keep the experimental design minimalistic in order to stress-test loss shaping and sampling rather than architecture search. As state above, all methods share the same structure, backbone, train/val/test splits, etc. The <code>baseline_ViT</code> configuration acts as a “do nothing” reference for how a standard ViT behaves under raw class imbalance. Each subsequent configuration changes exactly one dimension at a time so that relative differences can be attributed to that intervention rather than confounded by unrelated hyperparameter changes. The configurations we run are:
       </p>
 
       <ol>
@@ -1053,9 +1050,6 @@ no_pneumonia(0)       0.86      0.91      0.88      1551
     </div>
     <div class="main-content-block">
       <h1>Technical Implementation Details</h1>
-      <p>
-        All experiments are implemented in a single Python file structured into three blocks. The first block contains data download, splits, and transforms. The second block has our model and loss definitions. Finally, the third block contains the training and all of the experiments. You can view the code file for more details.
-      </p>
 
       <b>Training loop and evaluation.</b><br>
         Our core training and evaluation functions are shown below:
@@ -1083,15 +1077,10 @@ evaluate(model, loader, criterion, return_scores):<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;probs_pos = exp(log_probs)[:, 1]
         </div>
       </div><br>
-      <b>Reproducibility.</b><br>
-      <p>
-        For reproducibility, we fix random seeds for PyTorch, NumPy, and Python’s <code>random</code> module, and we log all configuration choices (loss type, sampler type, augmentation flags) as named experiment tags. Each configuration is trained once with this fixed seed; although this does not capture training-seed variance, it ensures that differences between rows in Table&nbsp;1 reflect only the configured imbalance strategy rather than accidental changes in data ordering or initialization.
-      </p>
-
 
     </div>
     <div class="margin-right-block">
-      The full source code, including the CAF-style mixed loss implementation and experiment scripts, is packaged in the <code>code</code> folder.
+      The full source code, including the CAF-style mixed loss implementation and experiment scripts, is packaged in the <code>code</code> folder. All experiments are implemented in a single Python file structured into three blocks. The first block contains data download, splits, and transforms. The second block has our model and loss definitions. Finally, the third block contains the training and all of the experiments. For reproducibility, we fix random seeds for PyTorch, NumPy, and Python’s <code>random</code> module, and we log all configuration choices (loss type, sampler type, augmentation flags) as named experiment tags. Each configuration is trained once with this fixed seed; although this does not capture training-seed variance, it ensures that differences between rows in Table&nbsp;1 reflect only the configured imbalance strategy rather than accidental changes in data ordering or initialization.
     </div>
   </div>
 
@@ -1130,10 +1119,6 @@ evaluate(model, loader, criterion, return_scores):<br>
         Our CAF-style loss was implemented as a mixture of class-weighted NLL and Focal Loss with mixing parameter lambda equal to 0.8. This mixing parameter was found through cross validation where we chose the value that maximized validation AUC from the set of candidate lambdas {0.2, 0.4, 0.6, 0.8} when we train on 5 epochs. This was meant to capture the intuition that we want both a prior that treats minority-class errors as more expensive and a focus on hard examples within each class, treating both ideas mentioned above. In the caf_nll experiment, we see that pneumonia recall rise to roughly 48 percent while maintaining an overall accuracy of about 0.81 and strong performance on the majority class (no-pneumonia recall around 91 percent). The pneumonia F1 score is also the highest among the reweighting-based methods. From a qualitative standpoint, we can see that CAF behaves like a balanced focal loss: it avoids some of the extreme over-correction of pure oversampling, yet still substantially improves minority recall relative to plain class weighting. Because the weighting and focusing are tied together with a single lambda, the effective behavior is easier to reason about than manually tuning independent alpha and gamma for each class. In practice, this can simplify the hyperparameter search for those that are working under tight compute budgets.
       </p>
 
-      <b>ROC curves and operating points:</b><br>
-      <p>
-        Overall, ROC-AUC values remain in a relatively narrow band (around the low-to-mid 0.8s) across all experiments even when the confusion matrices look very different. This highlights a key lesson: for highly imbalanced clinical tasks, the ROC-AUC statistic alone can really obscure key differences in model behavior at the operating points a clinician might actually use. For example, baseline_ViT and class_weighted_NLL can have similar AUCs, but one completely fails to detect pneumonia while the other achieves non-trivial recall. Our results show the need to report per-class metrics and confusion matrices in addition to summary statistics like ROC-AUC.
-      </p>
       <b>Loss functions implicitly choose an operating point:</b><br>
       <p>
         A key lesson from our experiments is that, with a fixed ViT backbone, the choice of training objective acts as an implicit decision about <i>where</i> on the ROC curve the model will operate. With plain NLL on an imbalanced dataset, empirical risk minimization is effectively cost-insensitive: the model is rewarded for optimizing overall accuracy, which is dominated by the majority “no pneumonia” class. The model never predicts pneumonia and get high accuracy but essentially zero sensitivity to the minority class.
