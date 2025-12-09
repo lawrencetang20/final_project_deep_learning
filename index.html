@@ -489,7 +489,7 @@
         </li>
         <li>
           <b>A CAF-style mixed loss tailored to medical class imbalance.</b>
-          We adapt class-adaptive focal ideas to a simple, ViT-compatible mixed objective that linearly combines class-weighted NLL and Focal Loss via a single mixing parameter λ, and we empirically show how this changes minority sensitivity and F1 relative to simpler baselines.
+          We adapt class-adaptive focal ideas to a simple, ViT-compatible mixed objective that linearly combines class-weighted NLL and focal loss via a single mixing parameter λ, and we empirically show how this changes minority sensitivity and F1 relative to simpler baselines.
         </li>
         <li>
           <b>Clinically oriented analysis of “good” performance.</b>
@@ -540,12 +540,6 @@
       </div>
       <br>
 
-      <b>Class-adaptive focal variants.</b><br>
-      <p>
-        Some works propose making gamma class-dependent, so that rare classes receive both higher weight and stronger focusing. We follow this spirit by fixing a single focusing parameter and mixing it with a class-weighted NLL term, allowing the degree of emphasis on rare classes to be controlled by a single hyperparameter $\lambda$.
-      </p>
-      <br>
-
       <b>Medical imaging benchmarks.</b><br>
       <p>
         The RSNA Pneumonia Detection Challenge dataset is an X-ray benchmark with image-level labels derived from radiology reports. Unlike toy datasets where classes are balanced by design, RSNA has a more realistic clinical label distribution, making it useful for studying imbalance in a setting that resembles real screening workflows. <a href="#ref_3">[3]</a>
@@ -556,11 +550,11 @@
       </p>
 
       <p>
-        In medical imaging, various prior works have explored imbalance losses, but typically, they used CNN-based architectures and didn’t use controlled comparisons. For example, Bolhassani studies COVID-19 vs. non-COVID chest X-ray classification on the imbalanced CoronaHack dataset using a ResNet50 backbone. They compare standard cross-entropy versus Focal Loss, reporting that Focal can improve performance on the minority class. <a href="#ref_5">[5]</a> However, that work does not examine class-weighted baselines, hybrid losses, or even data-level rebalancing, which can make it hard to tell whether focal is actually better than simpler tricks like inverse-frequency reweighting or oversampling. More recently, Bassi and Attux’s LungX framework uses a hybrid EfficientNet–Vision Transformer architecture for pneumonia detection and shows that ViT-style models transfer well to chest X-ray tasks. However, their focus is on architectural design and multi-task performance rather than on systematically dissecting class imbalance. <a href="#ref_6">[6]</a> This project extends upon these lines of work by holding the ViT architecture, data splits, and training pipeline fixed on the RSNA pneumonia task and varying only loss and sampling strategies. In doing so, we directly compare focal, class-weighted, and hybrid CAF losses against oversampling and minority-focused augmentation, and emphasize minority-class recall and confusion matrices rather than only global AUC—addressing a gap in how imbalance methods are evaluated for transformer-based medical image classifiers.
+        In medical imaging, various prior works have explored imbalance losses, but typically they've used CNN-based architectures and haven't used controlled comparisons. For example, Bolhassani studies COVID-19 vs. non-COVID chest X-ray classification on the imbalanced CoronaHack dataset using a ResNet50 backbone. They compare standard cross-entropy versus focal Loss, reporting that focal can improve performance on the minority class. <a href="#ref_5">[5]</a> However, that work does not examine class-weighted baselines, hybrid losses, or even data-level rebalancing, which can make it hard to tell whether focal is actually better than simpler tricks like inverse-frequency reweighting or oversampling. More recently, Bassi and Attux’s LungX framework uses a hybrid EfficientNet–Vision Transformer architecture for pneumonia detection and shows that ViT-style models transfer well to chest X-ray tasks. However, their focus is on architectural design and multi-task performance rather than on systematically dissecting class imbalance. <a href="#ref_6">[6]</a> This project extends upon these lines of work by holding the ViT architecture, data splits, and training pipeline fixed on the RSNA pneumonia task and varying only loss and sampling strategies. In doing so, we directly compare focal, class-weighted, and hybrid CAF losses against oversampling and minority-focused augmentation, and emphasize minority-class recall and confusion matrices rather than only global AUC—addressing a gap in how imbalance methods are evaluated for transformer-based medical image classifiers.
       </p>
     </div>
     <div class="margin-right-block">
-      Most prior work on class imbalance in medical imaging reports results for one or two tricks (e.g., class weights or focal loss) but rarely compares them in a controlled setting on the same backbone. Our project tries to make that comparison explicit for ViTs.
+      For focal loss, some works propose making gamma class-dependent, so that rare classes receive both higher weight and stronger focusing. In this project, we follow this spirit by fixing a single focusing parameter and mixing it with a class-weighted NLL term, allowing the degree of emphasis on rare classes to be controlled by a single hyperparameter $\lambda$.
     </div>
   </div>
 
@@ -627,7 +621,7 @@
         <!-- FOCAL LOSS -->
         <li>
           <b>Focal Loss on log-probabilities.</b><br>
-          We implement a multi-class Focal Loss that extracts the predicted probability of the true class and applies a focusing term with gamma = 2.0 and class-balancing α = [0.25, 0.75].<a href="#ref_2">[2]</a>
+          We implement a multi-class focal loss that extracts the predicted probability of the true class and applies a focusing term with gamma = 2.0 and class-balancing α = [0.25, 0.75].<a href="#ref_2">[2]</a>
           <div class="formula">
             \[
               L_{\text{focal}}
@@ -641,7 +635,7 @@
         <!-- CAF MIXED LOSS -->
         <li>
           <b>CAF-style mixed loss: class-weighted NLL + Focal.</b><br>
-          We combine class-weighted NLL and Focal Loss in a single mixed objective of the form (1 − $\lambda$) times the weighted NLL plus $\lambda$ times the focal loss. Here, the weighted NLL uses the same class weights as before, and the Focal Loss uses the same alpha and gamma as above. In our experiments we fix $\lambda$ equal to 0.8 so that rare classes receive both higher loss weight and stronger focusing.
+          We combine class-weighted NLL and focal loss in a single mixed objective of the form (1 − $\lambda$) times the weighted NLL plus $\lambda$ times the focal loss. Here, the weighted NLL uses the same class weights as before, and the focal loss uses the same alpha and gamma as above. In our experiments we fix $\lambda$ equal to 0.8 so that rare classes receive both higher loss weight and stronger focusing.
 
           <div class="formula">
             \[
@@ -939,7 +933,7 @@ no_pneumonia(0)       0.86      0.91      0.88      1551
         <b>Figure 7.</b> Test confusion matrix for <code>focal_loss</code>. Focal Loss further sharpens minority performance while keeping overall accuracy high, at the cost of extra hyperparameters.
       </div>
       <div class="slide-caption" id="caption-6">
-        <b>Figure 8.</b> Test confusion matrix for <code>caf_nll</code> (mixed weighted NLL + Focal Loss, λ = 0.8). CAF provides a strong compromise, further improving pneumonia F1 while maintaining robust majority-class performance.
+        <b>Figure 8.</b> Test confusion matrix for <code>caf_nll</code> (mixed weighted NLL + focal loss, λ = 0.8). CAF provides a strong compromise, further improving pneumonia F1 while maintaining robust majority-class performance.
       </div>
     </div>
   </div>
@@ -1104,11 +1098,11 @@ evaluate(model, loader, criterion, return_scores):<br>
 
       <b>Baseline vs. naive rebalancing:</b><br>
       <p>
-        We see that the baseline ViT with plain NLL achieves a seemingly high test accuracy of about 0.78. However this number is misleading because the confusion matrix reveals that the model almost never predicts pneumonia, predicting only three true positives out of 451 pneumonia cases. We can clearly see that the model has not been learning anything useful; it has actually learned that always predicting “no pneumonia” is an easy local optimum under class imbalance. Thus, this shows a common failure in medical machine learning where high accuracy is driven entirely by the majority class and is misleading.
+        We see that the baseline ViT with plain NLL achieves a high test accuracy of about 0.78. However this number is misleading because the confusion matrix reveals that the model almost never predicts pneumonia, predicting only three true positives out of 451 pneumonia cases. We can clearly see that the model has not been learning anything useful, as it actually learned that always predicting “no pneumonia” is an easy local optimum under class imbalance. This showcases a common failure in medical machine learning where high accuracy is actually driven entirely by the majority class and is therefore misleading.
       </p>
 
       <p>
-        For oversampling with <code>WeightedRandomSampler</code>, we see this picture changes dramatically. We encourage the model to pay attention to minority examples during training by frequently sampling examples that are positive. The test confusion matrix shows that pneumonia recall jumps to 68 percent, which is more meaningful than the baseline ViT. Now, we catch a majority of pneumonia cases. However, the cost of this is an increase in false positives and a small drop in overall accuracy from about 0.78 to about 0.77. From a screening perspective this trade-off is often acceptable, but oversampling alone can distort calibration and make a mismatch between the training and deployment prevalence.
+        For oversampling with <code>WeightedRandomSampler</code>, we see this picture changes dramatically. We encourage the model to pay attention to minority examples during training by frequently sampling examples that are positive. Pneumonia recall jumps to 68 percent, meaning we now catch a majority of pneumonia cases. However, the cost of this is an increase in false positives and a small drop in overall accuracy from about 0.78 to about 0.77. From a screening perspective this trade-off is often acceptable, but oversampling alone can distort calibration and cause a mismatch between the training and deployment prevalence.
       </p>
 
       <b>Augmenting the minority class in isolation:</b><br>
@@ -1122,21 +1116,21 @@ evaluate(model, loader, criterion, return_scores):<br>
       </p>
 
       <p>
-        For Focal Loss, we add a second layer of bias and focus training on hard examples by down-weighting easy, correctly classified cases. In the focal_loss experiment, we see that pneumonia recall is around the high 30s or 40 percent range, but there is also slightly improved overall accuracy (around 0.81) and a better balance between sensitivity and specificity. Qualitatively, Focal Loss shows that it can help the model pay attention to the borderline cases near the decision boundary and not overfitting to a few extremely easy positives, but at the cost of extra hyperparameters (alpha and gamma) that can be non-trivial to tune and may interact with dataset noise and label quality.
+        For focal loss, we add a second layer of bias and focus training on hard examples by down-weighting easy, correctly classified cases. In the focal_loss experiment, we see that pneumonia recall is around the high 30s or 40 percent range, but there is also slightly improved overall accuracy (around 0.81) and a better balance between sensitivity and specificity. Qualitatively, focal loss shows that it can help the model pay attention to the borderline cases near the decision boundary and not overfitting to a few extremely easy positives, but at the cost of extra hyperparameters (alpha and gamma) that can be non-trivial to tune and may interact with dataset noise and label quality.
       </p>
 
       <b>CAF-style mixed loss:</b><br>
       <p>
-        Our CAF-style loss was implemented as a mixture of class-weighted NLL and Focal Loss with mixing parameter $\lambda$ equal to 0.8. This mixing parameter was found through cross validation where we chose the value that maximized validation AUC from the set of candidate lambdas {0.2, 0.4, 0.6, 0.8} when we train on 5 epochs. This was meant to capture the intuition that we want both a prior that treats minority-class errors as more expensive and a focus on hard examples within each class, treating both ideas mentioned above. In the caf_nll experiment, we see that pneumonia recall rise to roughly 48 percent while maintaining an overall accuracy of about 0.81 and strong performance on the majority class (no-pneumonia recall around 91 percent). The pneumonia F1 score is also the highest among the reweighting-based methods. From a qualitative standpoint, we can see that CAF behaves like a balanced focal loss: it avoids some of the extreme over-correction of pure oversampling, yet still substantially improves minority recall relative to plain class weighting. Because the weighting and focusing are tied together with a single $\lambda$, the effective behavior is easier to reason about than manually tuning independent alpha and gamma for each class. In practice, this can simplify the hyperparameter search for those that are working under tight compute budgets.
+        Our CAF-style loss was implemented as a mixture of class-weighted NLL and focal loss with mixing parameter $\lambda$ equal to 0.8. This mixing parameter was found through cross validation where we chose the value that maximized validation AUC from the set of candidate lambdas {0.2, 0.4, 0.6, 0.8} when we train on 5 epochs. This was done because we want both a prior that treats minority-class errors as more expensive and a focus on hard examples within each class, treating both ideas mentioned above. In the caf_nll experiment, we see that pneumonia recall rises to roughly 48 percent while maintaining an overall accuracy of about 0.81 and strong performance on the majority class (no-pneumonia recall around 91 percent). The pneumonia F1 score is also the highest among the reweighting-based methods. From a qualitative standpoint, we can see that CAF behaves like a balanced focal loss: it avoids some of the extreme over-correction of pure oversampling, yet still substantially improves minority recall relative to plain class weighting. Because the weighting and focusing are tied together with a single $\lambda$, the effective behavior is easier to reason about than manually tuning independent alpha and gamma for each class. In practice, this can simplify the hyperparameter search for those that are working under tight compute budgets.
       </p>
 
       <b>Loss functions implicitly choose an operating point:</b><br>
       <p>
-        A key lesson from our experiments is that, with a fixed ViT backbone, the choice of training objective acts as an implicit decision about <i>where</i> on the ROC curve the model will operate. With plain NLL on an imbalanced dataset, empirical risk minimization is effectively cost-insensitive: the model is rewarded for optimizing overall accuracy, which is dominated by the majority “no pneumonia” class. The model never predicts pneumonia and get high accuracy but essentially zero sensitivity to the minority class.
+        A key takeaway from our experiments is that, with a fixed ViT backbone, the choice of training objective serves as an implicit decision about <i>where</i> on the ROC curve the model will operate. With plain NLL on an imbalanced dataset, empirical risk minimization is effectively cost-insensitive. This means that the model is rewarded for optimizing overall accuracy, which is dominated by the majority “no pneumonia” class. In turn, the model never predicts pneumonia and get high accuracy but essentially zero sensitivity to the minority class.
       </p>
 
       <p>
-        Once we introduce class-weighted NLL, oversampling, or focal-style objectives, we do not change the architecture, optimization algorithm, or data splits; we only change how the loss function scores mistakes. The confusion matrices in Figures 3–8 and the summary in Table&nbsp;1 show that these objectives move the ViT to a very different part of the ROC curve: pneumonia recall jumps from almost zero to 30–70% depending on the strategy, with only modest changes in overall accuracy and macro metrics. Imbalance handling is less about “fixing a weak backbone” and more about encoding an explicit preference over false negatives versus false positives into the training objective. The loss function is not just a numeric objective, but an implicit choice of operating point and error costs.
+        Once we introduce class-weighted NLL, oversampling, or focal-style objectives, we do not change the architecture, optimization algorithm, or data splits. Instead, we change how the loss function scores mistakes. The confusion matrices in Figures 3–8 and the summary in Table&nbsp;1 show that these objectives move the ViT to a very different part of the ROC curve. As a result, pneumonia recall jumps from almost zero to 30–70% depending on the strategy, with only modest changes in overall accuracy and macro metrics. Imbalance handling is less about “fixing a weak backbone” and more about encoding an explicit preference over false negatives versus false positives into the training objective. The loss function serves not just a numeric objective, but an implicit choice of operating point and error costs.
       </p>
 
       <b>Methodological limitations:</b><br>
